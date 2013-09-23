@@ -4,9 +4,10 @@ Little experiment to control an image carousel with a Kinect.
 
 ## Credits
 
-3D CSS carousel code by [David DeSandro](desandro.com)
-
-Check [https://github.com/desandro/3dtransforms](https://github.com/desandro/3dtransforms) for details
+- 3D CSS carousel code by [David DeSandro](desandro.com)    
+  Check [https://github.com/desandro/3dtransforms](https://github.com/desandro/3dtransforms) for details
+- OSC Bridge by Javi Agenjo [@tamat](https://twitter.com/tamat)   
+  Check [http://www.tamats.com/blog/?p=339](http://www.tamats.com/blog/?p=339)
 
 ## Dependencies/Libraries/Requirements
 
