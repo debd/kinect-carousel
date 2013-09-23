@@ -9,6 +9,16 @@ Demonstration video coming soon.
   Check [https://github.com/desandro/3dtransforms](https://github.com/desandro/3dtransforms) for details
 - OSC Bridge by Javi Agenjo [@tamat](https://twitter.com/tamat)   
   Check [http://www.tamats.com/blog/?p=339](http://www.tamats.com/blog/?p=339)
+  
+## Installation & Usage
+  
+- Buy a Kinect
+- Install drivers
+- Connect Kinect to your computer
+- Start OSC/Websocket bridge: `node oscbridge.js -port 4343`
+- Start Processing (`/kinect/kinect.pde`)
+- Open Client (`/client/index.html`)
+- Have fun!
 
 ## Dependencies/Libraries/Requirements
 
