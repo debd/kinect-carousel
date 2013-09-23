@@ -1,6 +1,7 @@
 # kinect-carousel
 
-Little experiment to control an image carousel with a Kinect.
+Little experiment to control an image carousel with a Kinect.  
+Demonstration video coming soon.
 
 ## Credits
 
