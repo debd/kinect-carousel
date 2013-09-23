@@ -6,8 +6,8 @@ var $cursor,
     $next;
 
 // global vars
-var window_width,
-    window_height,
+var carousel,                                           // carousel object
+    window_width, window_height,                        // clients resolution
     kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,  // original position data from kinect (res: 640x480)
     cursor_x, cursor_y,                                 // converted position data from kinect res to client res
     translateZ, translateX = 0,                         // carousel perspective
@@ -81,7 +81,7 @@ function stopWatch(){
         clearInterval(timer);
         
         // trigger click if progress timer is done
-        $(progress_hover_element).click();
+        handleButtonClick($(progress_hover_element));
         
     }else{
         var percent = 100-((seconds/timerSeconds)*100);
@@ -93,7 +93,7 @@ function checkMenu() {
     
     var hover = false;
     
-    $('#navigation').find('button').each(function() {
+    $('#buttons').find('button').each(function() {
         
         // get button coordinates
         var button_x = $(this).offset().left;
@@ -162,6 +162,16 @@ function moveCursor(data) {
 
     // set new perspective values 
     // $carousel.css({'-webkit-transform':'translateZ(' + translateZ + 'px)'});
+    
+    // check left/right hover area
+    var el = document.elementFromPoint(cursor_x,cursor_y);
+    var direction = $(el).attr('id'); 
+    
+    if (direction == 'left') {
+        
+    } else if (direction == 'right') {
+        
+    }
 
     checkMenu();
 }
@@ -178,6 +188,21 @@ function handleKinectData(data) {
     }
 }
 
+function handleButtonClick($obj) {
+    
+    var type = $obj.data('type');
+
+    if (type == 'navigation') {
+        var increment = parseInt( $obj.data('increment') );
+        carousel.rotation += carousel.theta * increment * -1;
+        carousel.transform();
+    } else if (type == 'rotate') {
+        $obj.addClass('rotate').one('webkitTransitionEnd', function () {
+            $obj.removeClass('rotate');
+        });
+    }
+}
+
 $(function() {
 
     window_width = $(window).width();
@@ -188,6 +213,7 @@ $(function() {
     $previous = $('#previous');
     $next = $('#next');    
 
+    // websocket gedöns
     if(!("WebSocket" in window)) {
         alert('Sorry your browser does not support web sockets');
     } else {
@@ -202,15 +228,9 @@ $(function() {
             handleKinectData(e.data);
         };
     }
-
-    var carousel = new Carousel3D( document.getElementById('carousel') ),
-        navButtons = document.querySelectorAll('#navigation button'),
-
-        onNavButtonClick = function( event ){
-            var increment = parseInt( event.target.getAttribute('data-increment') );
-            carousel.rotation += carousel.theta * increment * -1;
-            carousel.transform();
-        };
+    
+    // carousel init 
+    carousel = new Carousel3D( document.getElementById('carousel') )
 
     // populate on startup
     carousel.panelCount = 40;
@@ -222,13 +242,10 @@ $(function() {
      carousel.modify();
      }, false);
      */
-
-    for (var i=0; i < 2; i++) {
-        navButtons[i].addEventListener( 'click', onNavButtonClick, false);
-    }
-
-    setTimeout( function(){
-        document.body.addClassName('ready');
-    }, 0);
+    
+    $(document).on('click','button',function(){
+        handleButtonClick($(this));
+        return false;
+    });
 
 });

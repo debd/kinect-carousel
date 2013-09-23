@@ -15,6 +15,10 @@ body, html {
     height:100%;
 }
 
+.rotate {
+    -webkit-transform:rotate(360deg);
+}
+
 #cursor {
     width: 50px;
     height: 50px;
@@ -24,41 +28,61 @@ body, html {
     position: absolute;
     top:50%;
     left:50%;
-    z-index: 1000;
+    z-index: 10000;
 }
 
     #cursor input[type="text"] {
         display: none !important;
     }
 
-#options {
+#buttons {
     width:100%;
     height:100%;
+    top:0;
     position: absolute;
-    bottom:300px;
-    z-index: 500;
+    z-index: 5000;
 }
 
-    #options button {
+    #buttons button {
         position: absolute;
-        width:44%;
+        z-index: 5001;
+        width:30%;
+        left:35%;
         height:100px;
+        bottom:5%;
         padding:0;
         display: block;
-        background-color: #444;
+        background-color: #999;
         border:none;
         box-shadow: none;
+        -webkit-transition: -webkit-transform 1s;        
     }
+    
+#navigation {
+    top:0;
+    position: absolute;
+    z-index: 2000;
+    width:100%;
+    height:100%;
+    background-color: rgba(255,255,255,0.2);
+}    
 
-    #options button:first-child {
-        left:4%;
-        bottom:4%;
-    }
+#navigation #left {
+    position: absolute;
+    z-index: 2001;
+    height:100%;
+    width:30%;
+    background-color: rgba(45,170,150,0.5);
+}
 
-    #options button:last-child {
-        right:4%;
-        bottom:4%;
-    }
+#navigation #right {
+    position: absolute;
+    z-index: 2001;    
+    height:100%;
+    width:30%;
+    background-color: rgba(45,170,150,0.5);
+    right:0;
+}
 
 .timer {
     position:relative;
@@ -124,7 +148,7 @@ body, html {
     transform-style: preserve-3d;
 }
 
-.ready #carousel {
+#carousel {
     -webkit-transition: -webkit-transform 1s;
     -moz-transition: -moz-transform 1s;
     -o-transition: -o-transform 1s;
@@ -158,7 +182,7 @@ body, html {
     height:116px;
 }
 
-.ready #carousel figure {
+#carousel figure {
     -webkit-transition: opacity 1s, -webkit-transform 1s;
     -moz-transition: opacity 1s, -moz-transform 1s;
     -o-transition: opacity 1s, -o-transform 1s;
