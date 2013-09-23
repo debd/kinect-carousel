@@ -5,10 +5,12 @@ Demonstration video coming soon.
 
 ## Credits
 
-- 3D CSS carousel code by [David DeSandro](desandro.com)    
-  Check [https://github.com/desandro/3dtransforms](https://github.com/desandro/3dtransforms) for details
+- 3D CSS carousel by [David DeSandro](desandro.com)    
+  See [https://github.com/desandro/3dtransforms](https://github.com/desandro/3dtransforms) for details
 - OSC Bridge by Javi Agenjo [@tamat](https://twitter.com/tamat)   
-  Check [http://www.tamats.com/blog/?p=339](http://www.tamats.com/blog/?p=339)
+  See [http://www.tamats.com/blog/?p=339](http://www.tamats.com/blog/?p=339)
+- Progress bar for virtual cursor by [blakek.us](http://blakek.us/) and [atomicnogging](http://atomicnoggin.ca/blog/2010/02/20/pure-css3-pie-charts/)  
+  See [http://blakek.us/css3-pie-graph-timer-with-jquery/](http://blakek.us/css3-pie-graph-timer-with-jquery/)
   
 ## Installation & Usage
   

@@ -15,15 +15,6 @@ var window_width,
     timerFinish,                                        // time for progress-pie countdown
     transformProp = Modernizr.prefixed('transform');    // check CSS3 transforms
 
-/*
- * By David DeSandro
- * http://desandro.github.io/3dtransforms/
- * http://desandro.com/
- *
- * START CODE SNIPPET
- *
- */
-
 function Carousel3D ( el ) {
     this.element = el;
     this.rotation = 0;
@@ -72,15 +63,6 @@ Carousel3D.prototype.transform = function() {
     // and rotate it
     this.element.style[ transformProp ] = 'translateZ(-' + this.radius + 'px) ' + this.rotateFn + '(' + this.rotation + 'deg)';
 };
-
-/*
- * By David DeSandro
- * http://desandro.github.io/3dtransforms/
- * http://desandro.com/
- *
- * END CODE SNIPPET
- *
- */
 
 function drawTimer(percent){
     $('div.timer').html('<div class="percent"></div><div id="slice"'+(percent > 50?' class="gt50"':'')+'><div class="pie"></div>'+(percent > 50?'<div class="pie fill"></div>':'')+'</div>');
