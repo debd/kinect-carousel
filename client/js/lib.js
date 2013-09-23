@@ -1,18 +1,21 @@
 // cache jquery elements
 var $cursor,
     $progress,
-    $cj_carousel;
+    $carousel,
+    $previous,
+    $next;
 
 // global vars
 var window_width,
     window_height,
     kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,  // original position data from kinect (res: 640x480)
     cursor_x, cursor_y,                                 // converted position data from kinect res to client res
-    translateZ, translateX,                             // carousel 3D-data
+    translateZ, translateX = 0,                         // carousel perspective
     progress_in_action = false,                         // check if progress-pie of cursor el is in action
     timer,                                              // timer for progress-pie
     timerSeconds = 2,                                   // progress-pie countdown time
     timerFinish,                                        // time for progress-pie countdown
+    progress_hover_element,                             // element that's hovered by virtual cursor
     transformProp = Modernizr.prefixed('transform');    // check CSS3 transforms
 
 function Carousel3D ( el ) {
@@ -26,22 +29,22 @@ function Carousel3D ( el ) {
 
 Carousel3D.prototype.modify = function() {
 
-    var panel, angle, i;
+    var panel, angle, i, radius;
 
     this.panelSize = this.element[ this.isHorizontal ? 'offsetWidth' : 'offsetHeight' ];
     this.rotateFn = this.isHorizontal ? 'rotateY' : 'rotateX';
     this.theta = 360 / this.panelCount;
 
-    // do some trig to figure out how big the carousel
-    // is in 3D space
-    this.radius = Math.round( ( this.panelSize / 2) / Math.tan( Math.PI / this.panelCount ) );
+    // do some trig to figure out how big the carousel is in 3D space
+    radius = Math.round( ( this.panelSize / 2) / Math.tan( Math.PI / this.panelCount ) );
+    translateZ = radius;
 
     for ( i = 0; i < this.panelCount; i++ ) {
         panel = this.element.children[i];
         angle = this.theta * i;
         panel.style.opacity = 1;
         // rotate panel, then push it out in 3D space
-        panel.style[ transformProp ] = this.rotateFn + '(' + angle + 'deg) translateZ(' + this.radius + 'px)';
+        panel.style[ transformProp ] = this.rotateFn + '(' + angle + 'deg) translateZ(' + translateZ + 'px)';
     }
 
     // hide other panels
@@ -61,18 +64,14 @@ Carousel3D.prototype.modify = function() {
 Carousel3D.prototype.transform = function() {
     // push the carousel back in 3D space,
     // and rotate it
-    this.element.style[ transformProp ] = 'translateZ(-' + this.radius + 'px) ' + this.rotateFn + '(' + this.rotation + 'deg)';
+    this.element.style[ transformProp ] = 'translateZ(-' + translateZ + 'px) ' + this.rotateFn + '(' + this.rotation + 'deg)';
 };
 
+// TODO: clean up
 function drawTimer(percent){
     $('div.timer').html('<div class="percent"></div><div id="slice"'+(percent > 50?' class="gt50"':'')+'><div class="pie"></div>'+(percent > 50?'<div class="pie fill"></div>':'')+'</div>');
     var deg = 360/100*percent;
-    $('#slice .pie').css({
-        '-moz-transform':'rotate('+deg+'deg)',
-        '-webkit-transform':'rotate('+deg+'deg)',
-        '-o-transform':'rotate('+deg+'deg)',
-        'transform':'rotate('+deg+'deg)'
-    });
+    $('#slice').find('.pie').css({'-webkit-transform':'rotate('+deg+'deg)'});
 }
 
 function stopWatch(){
@@ -80,6 +79,10 @@ function stopWatch(){
     if(seconds <= 0){
         drawTimer(100);
         clearInterval(timer);
+        
+        // trigger click if progress timer is done
+        $(progress_hover_element).click();
+        
     }else{
         var percent = 100-((seconds/timerSeconds)*100);
         drawTimer(percent);
@@ -87,11 +90,37 @@ function stopWatch(){
 }
 
 function checkMenu() {
-    var $button = $('#button1');
-    var button_x = $button.offset().left;
-    var button_y = $button.offset().top;
+    
+    var hover = false;
+    
+    $('#navigation').find('button').each(function() {
+        
+        // get button coordinates
+        var button_x = $(this).offset().left;
+        var button_y = $(this).offset().top;
+        
+        // get button dimensions
+        var button_width = $(this).width();
+        var button_height = $(this).height();      
 
-    if (cursor_y > button_y) {
+        // check if cursor is inside button
+        if (
+            ( cursor_x >= button_x ) 
+            && ( (cursor_x + 50) <= ( button_x + button_width ) )
+            && ( cursor_y >= button_y )
+            && ( (cursor_y + 50) <= ( button_y + button_height ) )
+        ) {
+            
+            hover = true;
+            
+            // find element at cursor position
+            progress_hover_element = document.elementFromPoint(button_x,button_y);
+        }
+        
+    });
+      
+    // start progress animation if at least one button is covered by the cursor
+    if (hover) {
         if (!progress_in_action) {
             timerFinish = new Date().getTime()+(timerSeconds*1000);
             timer = setInterval('stopWatch()',50);
@@ -100,8 +129,9 @@ function checkMenu() {
     } else {
         clearInterval(timer);
         drawTimer(0);
-        progress_in_action = false;
+        progress_in_action = false;        
     }
+    
 }
 
 function addCursor() {
@@ -113,22 +143,32 @@ function removeCursor() {
 }
 
 function moveCursor(data) {
+    
+    // get coordinates from node.js server
+    // split string into single coordinate values
     var coordinates = data.split('/');
     kinect_cursor_x = parseFloat(coordinates[1].replace(/,/g,''));
     kinect_cursor_y = parseFloat(coordinates[2].replace(/,/g,''));
     kinect_cursor_z = parseFloat(coordinates[3].replace(/,/g,''));
 
+    // extrapolate coordinates from kinect resolution to window resolution
     cursor_x = parseInt((kinect_cursor_x * window_width) / 640);
     cursor_y = parseInt((kinect_cursor_y * window_height) / 480);
 
-    translateZ = (((kinect_cursor_z - 399) / 5.17) - 300) * 1.3;
+    // calculate 
+    //translateZ = (((kinect_cursor_z - 399) / 5.17) - 300) * 1.3;
     translateX = ((kinect_cursor_y / 12) - 20) * 1.4;
     $cursor.css({'left':cursor_x,'top':cursor_y});
+
+    // set new perspective values 
+    // $carousel.css({'-webkit-transform':'translateZ(' + translateZ + 'px)'});
 
     checkMenu();
 }
 
 function handleKinectData(data) {
+    
+    // check the type of the server message
     if (data.indexOf('handposition') != -1) {
         moveCursor(data);
     } else if (data.indexOf('found') != -1) {
@@ -144,6 +184,9 @@ $(function() {
     window_height = $(window).height();
     $cursor = $('#cursor');
     $progress = $('#progress');
+    $carousel = $('#carousel');
+    $previous = $('#previous');
+    $next = $('#next');    
 
     if(!("WebSocket" in window)) {
         alert('Sorry your browser does not support web sockets');

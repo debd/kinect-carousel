@@ -4,8 +4,15 @@
 }
 
 body {
-    background-color: #fff;
+    background-color: #111;
     font-family: 'Helvetica', sans-serif;
+    width:100%;
+    height: 100%;
+    overflow:hidden;
+}
+
+body, html {
+    height:100%;
 }
 
 #cursor {
@@ -24,24 +31,33 @@ body {
         display: none !important;
     }
 
-#navigation {
+#options {
     width:100%;
-    height:200px;
+    height:100%;
     position: absolute;
-    bottom:4%;
+    bottom:300px;
     z-index: 500;
 }
 
-    #navigation .button {
-        width:20%;
-        height:200px;
-        float:left;
-        margin:0 4% 0 0;
-        background-color: #555;
+    #options button {
+        position: absolute;
+        width:44%;
+        height:100px;
+        padding:0;
+        display: block;
+        background-color: #444;
+        border:none;
+        box-shadow: none;
     }
 
-    #navigation .button:first-child {
-        margin:0 4% 0 4%;
+    #options button:first-child {
+        left:4%;
+        bottom:4%;
+    }
+
+    #options button:last-child {
+        right:4%;
+        bottom:4%;
     }
 
 .timer {
@@ -91,7 +107,6 @@ body {
     height: 140px;
     position: relative;
     margin: 0 auto 40px;
-    border: 1px solid #CCC;
     -webkit-perspective: 1100px;
     -moz-perspective: 1100px;
     -o-perspective: 1100px;
