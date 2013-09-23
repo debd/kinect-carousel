@@ -28,24 +28,38 @@ body, html {
     position: absolute;
     top:50%;
     left:50%;
-    z-index: 10000;
+    z-index: 5000;
 }
 
     #cursor input[type="text"] {
         display: none !important;
     }
-
-#buttons {
-    width:100%;
-    height:100%;
+    
+#navigation {
     top:0;
     position: absolute;
-    z-index: 5000;
-}
+    width:100%;
+    height:100%;
+}    
 
-    #buttons button {
+    #navigation #left {
         position: absolute;
-        z-index: 5001;
+        z-index: 10000;
+        height:100%;
+        width:30%;
+    }
+    
+    #navigation #right {
+        position: absolute;
+        z-index: 10000;    
+        height:100%;
+        width:30%;
+        right:0;
+    }
+    
+    #navigation button {
+        position: absolute;
+        z-index: 1000;
         width:30%;
         left:35%;
         height:100px;
@@ -55,34 +69,8 @@ body, html {
         background-color: #999;
         border:none;
         box-shadow: none;
-        -webkit-transition: -webkit-transform 1s;        
+        -webkit-transition: -webkit-transform 1s;
     }
-    
-#navigation {
-    top:0;
-    position: absolute;
-    z-index: 2000;
-    width:100%;
-    height:100%;
-    background-color: rgba(255,255,255,0.2);
-}    
-
-#navigation #left {
-    position: absolute;
-    z-index: 2001;
-    height:100%;
-    width:30%;
-    background-color: rgba(45,170,150,0.5);
-}
-
-#navigation #right {
-    position: absolute;
-    z-index: 2001;    
-    height:100%;
-    width:30%;
-    background-color: rgba(45,170,150,0.5);
-    right:0;
-}
 
 .timer {
     position:relative;
@@ -148,12 +136,14 @@ body, html {
     transform-style: preserve-3d;
 }
 
+/*
 #carousel {
     -webkit-transition: -webkit-transform 1s;
     -moz-transition: -moz-transform 1s;
     -o-transition: -o-transform 1s;
     transition: transform 1s;
 }
+*/
 
 #carousel.panels-backface-invisible figure {
     -webkit-backface-visibility: hidden;

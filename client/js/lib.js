@@ -10,7 +10,7 @@ var carousel,                                           // carousel object
     window_width, window_height,                        // clients resolution
     kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,  // original position data from kinect (res: 640x480)
     cursor_x, cursor_y,                                 // converted position data from kinect res to client res
-    translateZ, translateX = 0,                         // carousel perspective
+    translateZ = 300, translateX = 0, angle = 0,                  // carousel perspective
     progress_in_action = false,                         // check if progress-pie of cursor el is in action
     timer,                                              // timer for progress-pie
     timerSeconds = 2,                                   // progress-pie countdown time
@@ -29,7 +29,7 @@ function Carousel3D ( el ) {
 
 Carousel3D.prototype.modify = function() {
 
-    var panel, angle, i, radius;
+    var panel, i, radius;
 
     this.panelSize = this.element[ this.isHorizontal ? 'offsetWidth' : 'offsetHeight' ];
     this.rotateFn = this.isHorizontal ? 'rotateY' : 'rotateX';
@@ -43,6 +43,7 @@ Carousel3D.prototype.modify = function() {
         panel = this.element.children[i];
         angle = this.theta * i;
         panel.style.opacity = 1;
+        
         // rotate panel, then push it out in 3D space
         panel.style[ transformProp ] = this.rotateFn + '(' + angle + 'deg) translateZ(' + translateZ + 'px)';
     }
@@ -90,10 +91,13 @@ function stopWatch(){
 }
 
 function checkMenu() {
+
+    /********************/
+    /* BUTTON FUNCTIONS */
+    /********************/
     
     var hover = false;
-    
-    $('#buttons').find('button').each(function() {
+    $('#navigation').find('button').each(function() {
         
         // get button coordinates
         var button_x = $(this).offset().left;
@@ -131,6 +135,26 @@ function checkMenu() {
         drawTimer(0);
         progress_in_action = false;        
     }
+
+    /*******************/
+    /* HOVER FUNCTIONS */
+    /*******************/
+        
+    // check left/right hover area
+    var el = document.elementFromPoint(cursor_x,cursor_y);
+    var direction = $(el).attr('id');
+    
+    console.log(el)
+
+    if (direction == 'left') {
+        angle = angle - 0.5;
+        console.log('- ' + angle);
+    } else if (direction == 'right') {
+        angle = angle + 0.5;
+        console.log('+ ' + angle);
+    }
+
+    $carousel.css({'-webkit-transform':'rotateY(' + angle + 'deg) translateZ(' + translateZ + 'px)'});    
     
 }
 
@@ -156,22 +180,9 @@ function moveCursor(data) {
     cursor_y = parseInt((kinect_cursor_y * window_height) / 480);
 
     // calculate 
-    //translateZ = (((kinect_cursor_z - 399) / 5.17) - 300) * 1.3;
+    translateZ = (((kinect_cursor_z - 399) / 5.17) - 300);
     translateX = ((kinect_cursor_y / 12) - 20) * 1.4;
     $cursor.css({'left':cursor_x,'top':cursor_y});
-
-    // set new perspective values 
-    // $carousel.css({'-webkit-transform':'translateZ(' + translateZ + 'px)'});
-    
-    // check left/right hover area
-    var el = document.elementFromPoint(cursor_x,cursor_y);
-    var direction = $(el).attr('id'); 
-    
-    if (direction == 'left') {
-        
-    } else if (direction == 'right') {
-        
-    }
 
     checkMenu();
 }
