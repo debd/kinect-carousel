@@ -46,14 +46,14 @@ body, html {
         position: absolute;
         z-index: 10000;
         height:100%;
-        width:30%;
+        width:50%;
     }
     
     #navigation #right {
         position: absolute;
         z-index: 10000;    
         height:100%;
-        width:30%;
+        width:50%;
         right:0;
     }
     
@@ -115,8 +115,8 @@ body, html {
 }
 
 .container {
-    width: 210px;
-    height: 140px;
+    width: 560px;
+    height: 240px;
     position: relative;
     margin: 0 auto 40px;
     -webkit-perspective: 1100px;
@@ -138,10 +138,10 @@ body, html {
 
 /*
 #carousel {
-    -webkit-transition: -webkit-transform 1s;
-    -moz-transition: -moz-transform 1s;
-    -o-transition: -o-transform 1s;
-    transition: transform 1s;
+    -webkit-transition: -webkit-transform 0.1s;
+    -moz-transition: -moz-transform 0.1s;
+    -o-transition: -o-transform 0.1s;
+    transition: transform 0.1s;
 }
 */
 
@@ -155,12 +155,12 @@ body, html {
 #carousel figure {
     display: block;
     position: absolute;
-    width: 186px;
-    height: 116px;
+    width: 500px;
+    height: 240px;
     left: 10px;
     top: 10px;
     border: 2px solid black;
-    line-height: 116px;
+    line-height: 240px;
     font-size: 80px;
     font-weight: bold;
     color: white;
@@ -168,8 +168,8 @@ body, html {
 }
 
 #carousel figure img {
-    width:186px;
-    height:116px;
+    width:500px;
+    height:240px;
 }
 
 #carousel figure {

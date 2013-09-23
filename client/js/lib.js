@@ -10,13 +10,14 @@ var carousel,                                           // carousel object
     window_width, window_height,                        // clients resolution
     kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,  // original position data from kinect (res: 640x480)
     cursor_x, cursor_y,                                 // converted position data from kinect res to client res
-    translateZ = 300, translateX = 0, angle = 0,                  // carousel perspective
+    translateZ, translateX = 0, angle,                  // carousel perspective
     progress_in_action = false,                         // check if progress-pie of cursor el is in action
     timer,                                              // timer for progress-pie
     timerSeconds = 2,                                   // progress-pie countdown time
     timerFinish,                                        // time for progress-pie countdown
     progress_hover_element,                             // element that's hovered by virtual cursor
-    transformProp = Modernizr.prefixed('transform');    // check CSS3 transforms
+    transformProp = Modernizr.prefixed('transform'),    // check CSS3 transforms
+    navigation_left_width, navigation_right_width;      // width of navigation areas
 
 function Carousel3D ( el ) {
     this.element = el;
@@ -45,7 +46,7 @@ Carousel3D.prototype.modify = function() {
         panel.style.opacity = 1;
         
         // rotate panel, then push it out in 3D space
-        panel.style[ transformProp ] = this.rotateFn + '(' + angle + 'deg) translateZ(' + translateZ + 'px)';
+        panel.style[ transformProp ] = this.rotateFn + '(' + angle + 'deg) translateZ(' + translateZ + 'px) rotateX(' + translateX + 'deg)';
     }
 
     // hide other panels
@@ -65,7 +66,7 @@ Carousel3D.prototype.modify = function() {
 Carousel3D.prototype.transform = function() {
     // push the carousel back in 3D space,
     // and rotate it
-    this.element.style[ transformProp ] = 'translateZ(-' + translateZ + 'px) ' + this.rotateFn + '(' + this.rotation + 'deg)';
+    this.element.style[ transformProp ] = 'translateZ(-' + translateZ + 'px) rotateX(' + translateX + 'deg) ' + this.rotateFn + '(' + angle + 'deg)';
 };
 
 // TODO: clean up
@@ -90,7 +91,7 @@ function stopWatch(){
     }
 }
 
-function checkMenu() {
+function checkCursorPosition() {
 
     /********************/
     /* BUTTON FUNCTIONS */
@@ -143,18 +144,20 @@ function checkMenu() {
     // check left/right hover area
     var el = document.elementFromPoint(cursor_x,cursor_y);
     var direction = $(el).attr('id');
-    
-    console.log(el)
 
     if (direction == 'left') {
-        angle = angle - 0.5;
-        console.log('- ' + angle);
+        angle = angle - (1 - (cursor_x / navigation_left_width));
     } else if (direction == 'right') {
-        angle = angle + 0.5;
-        console.log('+ ' + angle);
+        angle = angle + (1 - ((window_width - cursor_x) / (window_width - navigation_right_width)));
+    }
+    
+    if (angle < 0) {
+        angle = 360;
+    } else if (angle > 360) {
+        angle = 0;
     }
 
-    $carousel.css({'-webkit-transform':'rotateY(' + angle + 'deg) translateZ(' + translateZ + 'px)'});    
+    carousel.transform();
     
 }
 
@@ -180,11 +183,11 @@ function moveCursor(data) {
     cursor_y = parseInt((kinect_cursor_y * window_height) / 480);
 
     // calculate 
-    translateZ = (((kinect_cursor_z - 399) / 5.17) - 300);
-    translateX = ((kinect_cursor_y / 12) - 20) * 1.4;
+    // translateZ = (((kinect_cursor_z - 399) / 5.17) - 300) * 2;
+    translateX = ((kinect_cursor_y / 12) - 20) * 1.4 * -1;
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
-    checkMenu();
+    checkCursorPosition();
 }
 
 function handleKinectData(data) {
@@ -223,6 +226,9 @@ $(function() {
     $carousel = $('#carousel');
     $previous = $('#previous');
     $next = $('#next');    
+    
+    navigation_left_width = $('#left').width();
+    navigation_right_width = $('#right').width();    
 
     // websocket gedöns
     if(!("WebSocket" in window)) {
@@ -244,15 +250,12 @@ $(function() {
     carousel = new Carousel3D( document.getElementById('carousel') )
 
     // populate on startup
-    carousel.panelCount = 40;
+    carousel.panelCount = 20;
     carousel.modify();
 
-    /*
-     panelCountInput.addEventListener( 'change', function( event ) {
-     carousel.panelCount = event.target.value;
-     carousel.modify();
-     }, false);
-     */
+    // set carousel to middle of screen
+    var t = (window_height - $carousel.height()) / 2;
+    $carousel.css({'top':t});
     
     $(document).on('click','button',function(){
         handleButtonClick($(this));

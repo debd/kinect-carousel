@@ -29,6 +29,7 @@ void setup() {
   context.enableDepth();
   context.enableGesture();
   context.enableHands();
+  context.setSmoothingHands(.5);
   context.addGesture("Click");
   fill(255, 0, 0);
   
