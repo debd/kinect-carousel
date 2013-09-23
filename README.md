@@ -30,6 +30,4 @@ Check [https://github.com/desandro/3dtransforms](https://github.com/desandro/3dt
 		- oscP5
 		
 - Client:  
-	- HTML5
-	- CSS3
-	- jQuery
+	- Modern browser
