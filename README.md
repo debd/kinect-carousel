@@ -1,5 +1,7 @@
 # kinect-carousel
 
+Little experiment to control an image carousel with a Kinect.
+
 ## Credits
 
 3D CSS carousel code by [David DeSandro](desandro.com)
