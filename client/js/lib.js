@@ -10,7 +10,7 @@ var carousel,                                             // carousel object
     window_width, window_height,                          // clients resolution
     kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,    // original position data from kinect (res: 640x480)
     cursor_x, cursor_y,                                   // converted position data from kinect res to client res
-    _translateZ, translateZ, translateY = -300, rotation, // carousel perspective
+    _translateZ, translateZ, translateY = 0, rotation,    // carousel perspective
     progress_in_action = false,                           // check if progress-pie of cursor el is in action
     timer,                                                // timer for progress-pie
     timerSeconds = 2,                                     // progress-pie countdown time
@@ -228,11 +228,12 @@ function moveCursor(data) {
      *   
      *   1. kinect returns Y data from 0 to 480 
      *   2. max translation belongs to max_figure_height (height of container whichs contains the most images)
-     *   3. convert both ranges and apply it to Y translation
+	 *   3. add 1000 to max_figure_height, cause Y translation starts at -300 and we need 700px for spacing (looks better ;))
+     *   4. convert both ranges and apply it to Y translation
      * 
      */
 
-    translateY = (kinect_cursor_y * (max_figure_height / 480)) * -1;
+    translateY = ((kinect_cursor_y * ((max_figure_height + 1000) / 480)) * -1) + 300;
 	
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
