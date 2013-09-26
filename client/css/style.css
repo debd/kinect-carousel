@@ -119,7 +119,6 @@ body, html {
 
 .container {
     width: 560px;
-    height: 240px;
     position: relative;
     margin: 0 auto 40px;
     -webkit-perspective: 1100px;
@@ -159,7 +158,6 @@ body, html {
     display: block;
     position: absolute;
     width: 500px;
-    height: 240px;
     left: 10px;
     top: 10px;
     border: 2px solid black;
@@ -172,7 +170,6 @@ body, html {
 
 #carousel figure img {
     width:500px;
-    height:240px;
 }
 
 #carousel figure {
