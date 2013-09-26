@@ -146,9 +146,9 @@ function checkCursorPosition() {
     var direction = $(el).attr('id');
 
     if (direction == 'left') {
-        rotation = rotation + (1.2 - (cursor_x / navigation_left_width));
+        rotation = rotation + (1 - (cursor_x / navigation_left_width));
     } else if (direction == 'right') {
-        rotation = rotation - (1.2 - ((window_width - cursor_x) / (window_width - navigation_right_width)));
+        rotation = rotation - (1 - ((window_width - cursor_x) / (window_width - navigation_right_width)));
     }
     
     if (rotation < 0) {
@@ -182,9 +182,23 @@ function moveCursor(data) {
     cursor_x = parseInt((kinect_cursor_x * window_width) / 640);
     cursor_y = parseInt((kinect_cursor_y * window_height) / 480);
 
-    // calculate 
-    translateZ = _translateZ + (((((kinect_cursor_z - 600) / 4) - 300) * 2));
-    translateY = (((kinect_cursor_y / 0.8))) * -1;
+    /*
+     * calculate the depth
+     *
+     *   formula description:
+     *   
+     *   1. kinect z values have a range from 400mm to 4000mm
+     *   2. our maximal range for zooming should be around 600px (it felt good at testing), 
+     *      but both increasing and decreasing, so: -300px - 300px
+     *   3. so we need a factor to convert kinects range into our zooming range: kinect_range / zoom_range
+     *   4. then we have to calculate the depth value with our range factor: (kinect_z - 399) / factor - 300
+     *      we substract 399 to prevent "division by zero" errors
+     *   5. to speed up the zoom, we multiplacte the result with another factor (2 felt good at testing)
+     * 
+     */
+    
+    translateZ = _translateZ + (((((kinect_cursor_z - 399) / 6) - 300) * 2));
+    translateY = (((kinect_cursor_y / 0.4))) * -1;
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
     checkCursorPosition();
