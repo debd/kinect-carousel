@@ -160,12 +160,6 @@ body, html {
     width: 500px;
     left: 10px;
     top: 10px;
-    border: 2px solid black;
-    line-height: 240px;
-    font-size: 80px;
-    font-weight: bold;
-    color: white;
-    text-align: center;
 }
 
 #carousel figure img {
