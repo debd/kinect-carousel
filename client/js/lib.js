@@ -165,10 +165,10 @@ function checkCursorPosition() {
      */    
     
     if (direction == 'left') {
-        cursor_position_in_percent = cursor_x / navigation_left_width;
+        cursor_position_in_percent = 1 - (cursor_x / navigation_left_width);
         rotation = rotation + ((0.012 * cursor_position_in_percent)^4);
     } else if (direction == 'right') {
-        cursor_position_in_percent = ((window_width - cursor_x) / (window_width - navigation_right_width));
+        cursor_position_in_percent = 1 - (((window_width - cursor_x) / (window_width - navigation_right_width)));
         rotation = rotation - ((0.012 * cursor_position_in_percent)^4);
     }
     
