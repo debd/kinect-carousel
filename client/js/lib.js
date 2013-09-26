@@ -282,11 +282,11 @@ $(function() {
     navigation_right_width = $('#right').width();    
 
     // websocket gedöns
-    if(!("WebSocket" in window)) {
+    if(!('WebSocket' in window)) {
         alert('Sorry your browser does not support web sockets');
     } else {
 
-        var connection = new WebSocket("ws://127.0.0.1:4344");
+        var connection = new WebSocket('ws://127.0.0.1:4344');
 
         connection.onerror = function (error) {
             console.log('WebSocket Error ' + error);
