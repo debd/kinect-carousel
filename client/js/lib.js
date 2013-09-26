@@ -144,11 +144,32 @@ function checkCursorPosition() {
     // check left/right hover area
     var el = document.elementFromPoint(cursor_x,cursor_y);
     var direction = $(el).attr('id');
+    var cursor_position_in_percent;
 
+    /*
+     * calculate the rotation
+     *
+     *   formula description:
+     *   
+     *   1. to get a smooth rotation, use a power function 
+     *   2. to convert our values (0 - 100; position in percent, relative to hover area) to a rotation value from 
+     *       0 to 2, the following factors are needed:
+     *       
+     *       x = cursor_position_in_percent
+     *       a = 0,012
+     *       n = 4
+     *       
+     *       y = f(x) = ax^n
+     *       y = f(x) =  0,012 * x^4
+     * 
+     */    
+    
     if (direction == 'left') {
-        rotation = rotation + (1 - (cursor_x / navigation_left_width));
+        cursor_position_in_percent = cursor_x / navigation_left_width;
+        rotation = rotation + ((0.012 * cursor_position_in_percent)^4);
     } else if (direction == 'right') {
-        rotation = rotation - (1 - ((window_width - cursor_x) / (window_width - navigation_right_width)));
+        cursor_position_in_percent = ((window_width - cursor_x) / (window_width - navigation_right_width));
+        rotation = rotation - ((0.012 * cursor_position_in_percent)^4);
     }
     
     if (rotation < 0) {
