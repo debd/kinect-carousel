@@ -6,18 +6,18 @@ var $cursor,
     $next;
 
 // global vars
-var carousel,                                           // carousel object
-    window_width, window_height,                        // clients resolution
-    kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,  // original position data from kinect (res: 640x480)
-    cursor_x, cursor_y,                                 // converted position data from kinect res to client res
-    _translateZ, translateZ, translateY = 0, rotation,  // carousel perspective
-    progress_in_action = false,                         // check if progress-pie of cursor el is in action
-    timer,                                              // timer for progress-pie
-    timerSeconds = 2,                                   // progress-pie countdown time
-    timerFinish,                                        // time for progress-pie countdown
-    progress_hover_element,                             // element that's hovered by virtual cursor
-    transformProp = Modernizr.prefixed('transform'),    // check CSS3 transforms
-    navigation_left_width, navigation_right_width,      // width of navigation areas
+var carousel,                                             // carousel object
+    window_width, window_height,                          // clients resolution
+    kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,    // original position data from kinect (res: 640x480)
+    cursor_x, cursor_y,                                   // converted position data from kinect res to client res
+    _translateZ, translateZ, translateY = -300, rotation, // carousel perspective
+    progress_in_action = false,                           // check if progress-pie of cursor el is in action
+    timer,                                                // timer for progress-pie
+    timerSeconds = 2,                                     // progress-pie countdown time
+    timerFinish,                                          // time for progress-pie countdown
+    progress_hover_element,                               // element that's hovered by virtual cursor
+    transformProp = Modernizr.prefixed('transform'),      // check CSS3 transforms
+    navigation_left_width, navigation_right_width,        // width of navigation areas
     max_figure_height = 0;
 
 function Carousel3D ( el ) {
@@ -232,7 +232,8 @@ function moveCursor(data) {
      * 
      */
 
-    translateY = (kinect_cursor_y * (480 / max_figure_height)) * -1;
+    translateY = (kinect_cursor_y * (max_figure_height / 480)) * -1;
+	
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
     checkCursorPosition();
