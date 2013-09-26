@@ -15,11 +15,16 @@ Demonstration video coming soon.
 ## Installation & Usage
   
 - Buy a Kinect
-- Install drivers
+- Install Kinect drivers
+- Download Processing & install Processing libraries
 - Connect Kinect to your computer
-- Start OSC/Websocket bridge: `node oscbridge.js -port 4344`
-- Start Processing (`/kinect/kinect.pde`)
-- Open Client (`/client/index.html`)
+- Start OSC/Websocket bridge  
+  `$ cd kinect-carousel/server`  
+  `$ node oscbridge.js -port 4344`
+- Start Processing    
+  `/kinect-carousel/kinect/kinect.pde`
+- Open Client  
+  `/kinect-carousel/client/index.html`
 - Have fun!
 
 ## Dependencies/Libraries/Requirements
@@ -32,13 +37,14 @@ Demonstration video coming soon.
 ### Software
 
 - Server:
-	- node.js
-	- OSC/Websocket bridge
+	- node  
+      `$ brew install node`	
 	
 - Kinect:
 	- Processing
-		- SimpleOpenNI 0.27
-		- oscP5
+	- Processing Libraries
+		- [SimpleOpenNI 0.27](https://simple-openni.googlecode.com/files/SimpleOpenNI-0.27.zip)
+		- [oscP5 0.9.8](http://www.sojamo.de/libraries/oscP5/download/oscP5-0.9.8.zip)
 		
 - Client:  
 	- Modern browser
