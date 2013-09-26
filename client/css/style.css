@@ -46,14 +46,14 @@ body, html {
         position: absolute;
         z-index: 10000;
         height:100%;
-        width:40%;
+        width:50%;
     }
     
     #navigation #right {
         position: absolute;
         z-index: 10000;    
         height:100%;
-        width:40%;
+        width:50%;
         right:0;
     }
     
