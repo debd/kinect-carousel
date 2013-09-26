@@ -33,9 +33,6 @@ Demonstration video coming soon.
 
 - Server:
 	- node.js
-		- npm
-		- node-osc
-		- faye-websocket
 	- OSC/Websocket bridge
 	
 - Kinect:

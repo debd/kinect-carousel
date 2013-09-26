@@ -10,7 +10,7 @@ var carousel,                                           // carousel object
     window_width, window_height,                        // clients resolution
     kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,  // original position data from kinect (res: 640x480)
     cursor_x, cursor_y,                                 // converted position data from kinect res to client res
-    translateZ, translateX = 0, angle,                  // carousel perspective
+    _translateZ, translateZ, translateY = 0, rotation,  // carousel perspective
     progress_in_action = false,                         // check if progress-pie of cursor el is in action
     timer,                                              // timer for progress-pie
     timerSeconds = 2,                                   // progress-pie countdown time
@@ -30,23 +30,24 @@ function Carousel3D ( el ) {
 
 Carousel3D.prototype.modify = function() {
 
-    var panel, i, radius;
+    var panel, angle, i;
 
     this.panelSize = this.element[ this.isHorizontal ? 'offsetWidth' : 'offsetHeight' ];
     this.rotateFn = this.isHorizontal ? 'rotateY' : 'rotateX';
     this.theta = 360 / this.panelCount;
 
     // do some trig to figure out how big the carousel is in 3D space
-    radius = Math.round( ( this.panelSize / 2) / Math.tan( Math.PI / this.panelCount ) );
-    translateZ = radius;
-
+    this.radius = Math.round( ( this.panelSize / 2) / Math.tan( Math.PI / this.panelCount ) );
+    _translateZ = this.radius * -1;
+    translateZ = _translateZ;
+    
     for ( i = 0; i < this.panelCount; i++ ) {
         panel = this.element.children[i];
         angle = this.theta * i;
         panel.style.opacity = 1;
         
         // rotate panel, then push it out in 3D space
-        panel.style[ transformProp ] = this.rotateFn + '(' + angle + 'deg) translateZ(' + translateZ + 'px) rotateX(' + translateX + 'deg)';
+        panel.style[ transformProp ] = this.rotateFn + '(' + angle + 'deg) translateZ(' + this.radius + 'px)';
     }
 
     // hide other panels
@@ -58,15 +59,14 @@ Carousel3D.prototype.modify = function() {
 
     // adjust rotation so panels are always flat
     this.rotation = Math.round( this.rotation / this.theta ) * this.theta;
+    rotation = this.rotation;
 
     this.transform();
 
 };
 
 Carousel3D.prototype.transform = function() {
-    // push the carousel back in 3D space,
-    // and rotate it
-    this.element.style[ transformProp ] = 'translateZ(-' + translateZ + 'px) rotateX(' + translateX + 'deg) ' + this.rotateFn + '(' + angle + 'deg)';
+    this.element.style[ transformProp ] = 'translateZ(' + translateZ + 'px) translateY(' + translateY + 'px) ' + this.rotateFn + '(' + rotation + 'deg)';    
 };
 
 // TODO: clean up
@@ -146,17 +146,17 @@ function checkCursorPosition() {
     var direction = $(el).attr('id');
 
     if (direction == 'left') {
-        angle = angle - (1 - (cursor_x / navigation_left_width));
+        rotation = rotation + (1.2 - (cursor_x / navigation_left_width));
     } else if (direction == 'right') {
-        angle = angle + (1 - ((window_width - cursor_x) / (window_width - navigation_right_width)));
+        rotation = rotation - (1.2 - ((window_width - cursor_x) / (window_width - navigation_right_width)));
     }
     
-    if (angle < 0) {
-        angle = 360;
-    } else if (angle > 360) {
-        angle = 0;
+    if (rotation < 0) {
+        rotation = 360;
+    } else if (rotation > 360) {
+        rotation = 0;
     }
-
+    
     carousel.transform();
     
 }
@@ -183,8 +183,8 @@ function moveCursor(data) {
     cursor_y = parseInt((kinect_cursor_y * window_height) / 480);
 
     // calculate 
-    // translateZ = (((kinect_cursor_z - 399) / 5.17) - 300) * 2;
-    translateX = ((kinect_cursor_y / 12) - 20) * 1.4 * -1;
+    translateZ = _translateZ + (((((kinect_cursor_z - 399) / 5.17) - 300) * 1.6));
+    translateY = (((kinect_cursor_y / 0.8))) * -1;
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
     checkCursorPosition();
@@ -235,7 +235,7 @@ $(function() {
         alert('Sorry your browser does not support web sockets');
     } else {
 
-        var connection = new WebSocket("ws://127.0.0.1:4343");
+        var connection = new WebSocket("ws://127.0.0.1:4344");
 
         connection.onerror = function (error) {
             console.log('WebSocket Error ' + error);
@@ -247,7 +247,7 @@ $(function() {
     }
     
     // carousel init 
-    carousel = new Carousel3D( document.getElementById('carousel') )
+    carousel = new Carousel3D(document.getElementById('carousel'));
 
     // populate on startup
     carousel.panelCount = 20;
@@ -255,7 +255,7 @@ $(function() {
 
     // set carousel to middle of screen
     var t = (window_height - $carousel.height()) / 2;
-    $carousel.css({'top':t});
+    $carousel.css({'top':t});    
     
     $(document).on('click','button',function(){
         handleButtonClick($(this));
