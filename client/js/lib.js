@@ -153,7 +153,7 @@ function checkCursorPosition() {
      *   
      *   1. to get a smooth rotation, use a power function 
      *   2. to convert our values (0 - 100; position in percent, relative to hover area) to a rotation value from 
-     *       0 to 2, the following factors are needed:
+     *       0 to 2 (degree), the following factors are needed:
      *       
      *       x = cursor_position_in_percent
      *       a = 0,012
@@ -166,10 +166,10 @@ function checkCursorPosition() {
     
     if (direction == 'left') {
         cursor_position_in_percent = 1 - (cursor_x / navigation_left_width);
-        rotation = rotation + ((0.012 * cursor_position_in_percent)^4);
+        rotation = rotation + Math.pow((0.012 * cursor_position_in_percent), 4);
     } else if (direction == 'right') {
         cursor_position_in_percent = 1 - (((window_width - cursor_x) / (window_width - navigation_right_width)));
-        rotation = rotation - ((0.012 * cursor_position_in_percent)^4);
+        rotation = rotation - Math.pow((0.012 * cursor_position_in_percent), 4);
     }
     
     if (rotation < 0) {
