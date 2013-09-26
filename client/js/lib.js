@@ -183,7 +183,7 @@ function moveCursor(data) {
     cursor_y = parseInt((kinect_cursor_y * window_height) / 480);
 
     // calculate 
-    translateZ = _translateZ + (((((kinect_cursor_z - 399) / 4) - 300) * 1.6));
+    translateZ = _translateZ + (((((kinect_cursor_z - 600) / 4) - 300) * 2));
     translateY = (((kinect_cursor_y / 0.8))) * -1;
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
