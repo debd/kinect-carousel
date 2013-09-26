@@ -18,10 +18,10 @@ void setup() {
   size(640, 480);
   
   // start oscP5, telling it to listen for incoming messages
-  oscP5 = new OscP5(this,43431);
+  oscP5 = new OscP5(this,43441);
  
   // set the remote location to be the localhost
-  myRemoteLocation = new NetAddress("127.0.0.1",43431);  
+  myRemoteLocation = new NetAddress("127.0.0.1",43441);  
   
   // set openNI and some options
   context = new SimpleOpenNI(this);
