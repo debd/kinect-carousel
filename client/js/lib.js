@@ -188,16 +188,16 @@ function moveCursor(data) {
      *   formula description:
      *   
      *   1. kinect z values have a range from 400mm to 4000mm
-     *   2. our maximal range for zooming should be around 600px (it felt good at testing), 
-     *      but both increasing and decreasing, so: -300px - 300px
+     *   2. our maximal range for zooming should be around 1000px (it felt good at testing), 
+     *      but both increasing and decreasing, so: -500px - 500px
      *   3. so we need a factor to convert kinects range into our zooming range: kinect_range / zoom_range
      *   4. then we have to calculate the depth value with our range factor: (kinect_z - 399) / factor - 300
      *      we substract 399 to prevent "division by zero" errors
-     *   5. to speed up the zoom, we multiplacte the result with another factor (2 felt good at testing)
+     *   5. to speed up the zoom, we multiplacte the result with another factor (1.5 felt good at testing)
      * 
      */
     
-    translateZ = _translateZ + (((((kinect_cursor_z - 399) / 6) - 300) * 2));
+    translateZ = _translateZ + (((((kinect_cursor_z - 399) / 3.6) - 300) * 1.5));
     translateY = (((kinect_cursor_y / 0.4))) * -1;
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
