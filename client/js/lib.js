@@ -209,9 +209,10 @@ function moveCursor(data) {
      *
      *   formula description:
      *   
-     *   1. kinect z values have a range from 400mm to 4000mm
+     *   1. kinect z values have a range from 400mm to 3500mm (in effect, 4000mm, but we only track until 3500 because of 
+	        limited space)
      *   2. our maximal range for zooming should be around 1000px (it felt good at testing), 
-     *      but both increasing and decreasing, so: -500px - 500px
+     *      but both increasing and decreasing, so: -300px - 300px
      *   3. so we need a factor to convert kinects range into our zooming range: kinect_range / zoom_range
      *   4. then we have to calculate the depth value with our range factor: (kinect_z - 399) / factor - 300;
      *      we substract 399 to prevent "division by zero" errors
@@ -219,7 +220,7 @@ function moveCursor(data) {
      * 
      */
     
-    translateZ = _translateZ + (((kinect_cursor_z - 399) / 3.6) - 300) * 1.5;
+    translateZ = _translateZ + (((kinect_cursor_z - 399) / 5.17) - 300) * 3.5;
 
     /*
      * calculate the Y translation
