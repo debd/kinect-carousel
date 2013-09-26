@@ -37,14 +37,17 @@ Demonstration video coming soon.
 ### Software
 
 - Server:
-	- node  
+	- [node](http://nodejs.org/)  
       `$ brew install node`	
+    - node modules (already included in `/kinect-carousel/server/node_modules`)
+        - [faye-websocket](https://github.com/faye/faye-websocket-node)
+        - [node-osc](https://github.com/termie/node-osc)
 	
 - Kinect:
-	- Processing
-	- Processing Libraries
+	- [Processing](https://processing.org/download/)
+	- Processing libraries
 		- [SimpleOpenNI 0.27](https://simple-openni.googlecode.com/files/SimpleOpenNI-0.27.zip)
 		- [oscP5 0.9.8](http://www.sojamo.de/libraries/oscP5/download/oscP5-0.9.8.zip)
 		
 - Client:  
-	- Modern browser
+	- Modern browser with websocket support
