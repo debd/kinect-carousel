@@ -17,7 +17,7 @@ Demonstration video coming soon.
 - Buy a Kinect
 - Install drivers
 - Connect Kinect to your computer
-- Start OSC/Websocket bridge: `node oscbridge.js -port 4343`
+- Start OSC/Websocket bridge: `node oscbridge.js -port 4344`
 - Start Processing (`/kinect/kinect.pde`)
 - Open Client (`/client/index.html`)
 - Have fun!
