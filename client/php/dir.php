@@ -34,10 +34,10 @@ function read_all_files($root = '.'){
 }
 
 $array = array();
-$files = read_all_files('../img');
+$dirs = read_all_files('../img');
 
 $i = 0;
-foreach ($files['dirs'] as $dir) {
+foreach ($dirs['dirs'] as $dir) {
     
     $images = read_all_files($dir);
     
