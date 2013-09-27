@@ -23,6 +23,8 @@ Demonstration video coming soon.
   `$ node oscbridge.js -port 4344`
 - Start Processing    
   `/kinect-carousel/kinect/kinect.pde`
+- Put images in `/kinect-carousel/client/img` folder  
+  Carousels are initiated for each folder inside this folder (see the example folder/file structure)
 - Open Client  
   `/kinect-carousel/client/index.html`
 - Have fun!
