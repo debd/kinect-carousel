@@ -237,12 +237,12 @@ function moveCursor(data) {
      *   
      *   1. kinect returns Y data from 0 to 480 
      *   2. max translation belongs to max_figure_height (height of container whichs contains the most images)
-	 *   3. add 1200 to max_figure_height, cause Y translation starts at -500 and we need 700px for spacing (looks better ;))
+	 *   3. add 1750 to max_figure_height, cause Y translation starts at -750 and we need 1000px for spacing (looks better ;))
      *   4. convert both ranges and apply it to Y translation
      * 
      */
 
-    carousels[c].translateY = ((kinect_cursor_y * ((carousels[c].max_height + 1200) / 480)) * -1) + 1500;
+    carousels[c].translateY = 750 + ((kinect_cursor_y * ((carousels[c].max_height + 1750) / 480)) * -1);
 	
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
