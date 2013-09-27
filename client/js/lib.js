@@ -244,7 +244,7 @@ function moveCursor(data) {
      * 
      */
 
-    carousels[c].translateY = -500 + (kinect_cursor_y * ((carousels[c].max_height + 1200) / 480)) * -1;
+    carousels[c].translateY = 700 + (kinect_cursor_y * ((carousels[c].max_height + 1700) / 480)) * -1;
 	
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
@@ -287,7 +287,7 @@ function handleButtonClick($obj) {
 
 function insertRandomImages(images) {
     var $l = $('.carousel').last();
-    var r = Math.floor(Math.random() * 6) + 1;
+    var r = Math.floor(Math.random() * 5) + 2;
     
     $l.append('<figure></figure>');
     
@@ -358,7 +358,21 @@ $(function() {
         };
     }
     
-    // top margin
+    $(document).on('click','button',function(){
+        handleButtonClick($(this));
+        return false;
+    });
+
+    $buttons.each(function(i) {
+        var l = i * $(this).width();
+        $(this).css({'left':l});
+    });
+
+});
+
+$(window).load(function(){
+	
+	 // top margin
     var top = 0;
     
     // init carousels
@@ -395,14 +409,6 @@ $(function() {
     // fade in first carousel
     $('.screen:first-child').css({'opacity':1});
     
-    $(document).on('click','button',function(){
-        handleButtonClick($(this));
-        return false;
-    });
-
-    $buttons.each(function(i) {
-        var l = i * $(this).width();
-        $(this).css({'left':l});
-    });
-
-});
+   
+	
+	});
