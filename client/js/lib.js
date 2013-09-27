@@ -13,16 +13,14 @@ var carousels = [],                                         // carousel object
     window_width, window_height,                            // clients resolution
     kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,      // original position data from kinect (res: 640x480)
     cursor_x, cursor_y,                                     // converted position data from kinect res to client res
-    _translateZ, translateZ, translateY = 0, rotation,      // carousel perspective
     progress_in_action = false,                             // check if progress-pie of cursor el is in action
     timer,                                                  // timer for progress-pie
     timerSeconds = 2,                                       // progress-pie countdown time
     timerFinish,                                            // time for progress-pie countdown
     progress_hover_element,                                 // element that's hovered by virtual cursor
     transformProp = Modernizr.prefixed('transform'),        // check CSS3 transforms
-    navigation_left_width, navigation_right_width,          // width of navigation areas
-    max_figure_height = 0,                                  // store the max figure height to calc the max Y translation 
-    active_carousel = 0,                                    // store the number of the active carousel
+    navigation_left_width, navigation_right_width,          // width of navigation areas 
+    c = 0,                                                  // store the number of the active carousel
     spacing = 500;                                          // spacing between screens
 
 function Carousel3D ( el ) {
@@ -32,6 +30,10 @@ function Carousel3D ( el ) {
     this.totalPanelCount = this.element.children.length;
     this.theta = 0;
     this.isHorizontal = true;
+    this._translateZ = 0;
+    this.translateZ = 0;
+    this.translateY = 0;
+    this.max_height = 0;
 }
 
 Carousel3D.prototype.modify = function() {
@@ -44,8 +46,8 @@ Carousel3D.prototype.modify = function() {
 
     // do some trig to figure out how big the carousel is in 3D space
     this.radius = Math.round( ( this.panelSize / 2) / Math.tan( Math.PI / this.panelCount ) );
-    _translateZ = this.radius * -1;
-    translateZ = _translateZ;
+    this._translateZ = this.radius * -1;
+    this.translateZ = this._translateZ;
     
     for ( i = 0; i < this.panelCount; i++ ) {
         
@@ -66,14 +68,13 @@ Carousel3D.prototype.modify = function() {
 
     // adjust rotation so panels are always flat
     this.rotation = Math.round( this.rotation / this.theta ) * this.theta;
-    rotation = this.rotation;
 
     this.transform();
 
 };
 
 Carousel3D.prototype.transform = function() {
-    this.element.style[ transformProp ] = 'translateZ(' + translateZ + 'px) translateY(' + translateY + 'px) ' + this.rotateFn + '(' + rotation + 'deg)';    
+    this.element.style[ transformProp ] = 'translateZ(' + this.translateZ + 'px) translateY(' + this.translateY + 'px) ' + this.rotateFn + '(' + this.rotation + 'deg)';    
 };
 
 // TODO: clean up
@@ -153,8 +154,6 @@ function checkCursorPosition() {
     // check left/right hover area
     var el = document.elementFromPoint(cursor_x,cursor_y);
     
-    console.log(el)
-    
     var direction = $(el).attr('id');
     var cursor_position_in_percent;
 
@@ -178,19 +177,19 @@ function checkCursorPosition() {
     
     if (direction == 'left') {
         cursor_position_in_percent = (1 - (cursor_x / navigation_left_width)) * 100;
-        rotation = rotation + Math.pow((0.022 * cursor_position_in_percent), 3);
+        carousels[c].rotation = carousels[c].rotation + Math.pow((0.022 * cursor_position_in_percent), 3);
     } else if (direction == 'right') {
         cursor_position_in_percent = (1 - (((window_width - cursor_x) / (window_width - navigation_right_width)))) * 100;
-        rotation = rotation - Math.pow((0.022 * cursor_position_in_percent), 3);
+        carousels[c].rotation = carousels[c].rotation - Math.pow((0.022 * cursor_position_in_percent), 3);
     }
     
-    if (rotation < 0) {
-        rotation = 360;
-    } else if (rotation > 360) {
-        rotation = 0;
+    if (carousels[c].rotation < 0) {
+        carousels[c].rotation = 360;
+    } else if (carousels[c].rotation > 360) {
+        carousels[c].rotation = 0;
     }
 
-    carousels[active_carousel].transform();
+    carousels[c].transform();
     
 }
 
@@ -230,8 +229,8 @@ function moveCursor(data) {
      *   5. to speed up the zoom, we multiplacte the result with another factor (1.5 felt good at testing)
      * 
      */
-    
-    translateZ = _translateZ + (((kinect_cursor_z - 399) / 5.17) - 300) * 3.5;
+
+    carousels[c].translateZ = carousels[c]._translateZ + (((kinect_cursor_z - 399) / 5.17) - 300) * 3.5;
 
     /*
      * calculate the Y translation
@@ -240,12 +239,12 @@ function moveCursor(data) {
      *   
      *   1. kinect returns Y data from 0 to 480 
      *   2. max translation belongs to max_figure_height (height of container whichs contains the most images)
-	 *   3. add 1000 to max_figure_height, cause Y translation starts at -300 and we need 700px for spacing (looks better ;))
+	 *   3. add 1200 to max_figure_height, cause Y translation starts at -500 and we need 700px for spacing (looks better ;))
      *   4. convert both ranges and apply it to Y translation
      * 
      */
 
-    translateY = ((kinect_cursor_y * ((max_figure_height + 1000) / 480)) * -1) + 300;
+    carousels[c].translateY = ((kinect_cursor_y * ((carousels[c].max_height + 1200) / 480)) * -1) + 500;
 	
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
@@ -268,13 +267,9 @@ function handleButtonClick($obj) {
     
     var type = $obj.data('type');
 
-    if (type == 'navigation') {
-        var increment = parseInt( $obj.data('increment') );
-        carousels[active_carousel].rotation += carousels[active_carousel].theta * increment * -1;
-        carousels[active_carousel].transform();
-    } else if (type == 'switch') {
+    if (type == 'switch') {
         var target = $obj.data('target');
-        active_carousel = target;
+        c = target;
         
         // calculate translation to move to next carousel
         var left = target * window_width;
@@ -359,15 +354,13 @@ $(function() {
         $(this).css({'left':l});
     });    
 
-    /*
-    $carousels.each(function(){
+    $carousels.each(function(i){
         $(this).find('figure').each(function(){
             var $obj = $(this);
-            if (max_figure_height < $obj.height()) {
-                max_figure_height = $obj.height();
+            if (carousels[i].max_height < $obj.height()) {
+                carousels[i].max_height = $obj.height();
             }    
         });
     });
-    */
 
 });
