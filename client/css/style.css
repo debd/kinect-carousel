@@ -8,11 +8,25 @@ body {
     font-family: 'Helvetica', sans-serif;
     width:100%;
     height: 100%;
-    overflow:hidden;
 }
 
 body, html {
     height:100%;
+}
+
+.wrapper-outer {
+    height:100%;
+    overflow: hidden;
+}
+
+.wrapper-inner {
+    height:100%;
+    -webkit-transition: -webkit-transform 1s;
+}
+
+.screen {
+    position: absolute;
+    height:100%;    
 }
 
 .rotate {
@@ -37,7 +51,7 @@ body, html {
     
 #navigation {
     top:0;
-    position: absolute;
+    position: fixed;
     width:100%;
     height:100%;
 }    
@@ -59,19 +73,20 @@ body, html {
     
     #navigation button {
         position: absolute;
-        z-index: 9000;
-        width:20%;
-        left:35%;
-        height:100px;
-        bottom:15%;
+        z-index: 11000;
+        width:300px;
+        height:300px;
+        left:0;
+        bottom:0;
         padding:0;
         display: block;
-        background-color: #7D00D9;
+        background-color: transparent;
         color:#fff;
         font-size: 40px;
         font-family: 'Helvetica', sans-serif;
         border:none;
         box-shadow: none;
+        background-color: rgba(255,255,255,0.05);
         -webkit-transition: -webkit-transform 1s;
     }
 
@@ -81,7 +96,7 @@ body, html {
     width:1em;
     height:1em;
     float: left;
-    text-indent: -99999;
+    text-indent: -99999px;
 }
 .timer > .percent {
     position: absolute;
@@ -128,7 +143,7 @@ body, html {
 }
 
 
-#carousel {
+.carousel {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -139,7 +154,7 @@ body, html {
 }
 
 /*
-#carousel {
+.carousel {
     -webkit-transition: -webkit-transform 0.1s;
     -moz-transition: -moz-transform 0.1s;
     -o-transition: -o-transform 0.1s;
@@ -147,14 +162,14 @@ body, html {
 }
 */
 
-#carousel.panels-backface-invisible figure {
+.carousel.panels-backface-invisible figure {
     -webkit-backface-visibility: hidden;
     -moz-backface-visibility: hidden;
     -o-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
-#carousel figure {
+.carousel figure {
     display: block;
     position: absolute;
     width: 500px;
@@ -162,12 +177,12 @@ body, html {
     top: 10px;
 }
 
-#carousel figure img {
+.carousel figure img {
     width:500px;
 	margin: 0 0 40px 0;
 }
 
-#carousel figure {
+.carousel figure {
     -webkit-transition: opacity 1s, -webkit-transform 1s;
     -moz-transition: opacity 1s, -moz-transform 1s;
     -o-transition: opacity 1s, -o-transform 1s;

@@ -1,24 +1,28 @@
 // cache jquery elements
 var $cursor,
     $progress,
-    $carousel,
+    $carousels,
     $previous,
-    $next;
+    $next,
+    $screen,
+    $buttons;
 
 // global vars
-var carousel,                                             // carousel object
-    window_width, window_height,                          // clients resolution
-    kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,    // original position data from kinect (res: 640x480)
-    cursor_x, cursor_y,                                   // converted position data from kinect res to client res
-    _translateZ, translateZ, translateY = 0, rotation,    // carousel perspective
-    progress_in_action = false,                           // check if progress-pie of cursor el is in action
-    timer,                                                // timer for progress-pie
-    timerSeconds = 2,                                     // progress-pie countdown time
-    timerFinish,                                          // time for progress-pie countdown
-    progress_hover_element,                               // element that's hovered by virtual cursor
-    transformProp = Modernizr.prefixed('transform'),      // check CSS3 transforms
-    navigation_left_width, navigation_right_width,        // width of navigation areas
-    max_figure_height = 0;
+var carousels = [],                                         // carousel object
+    window_width, window_height,                            // clients resolution
+    kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,      // original position data from kinect (res: 640x480)
+    cursor_x, cursor_y,                                     // converted position data from kinect res to client res
+    _translateZ, translateZ, translateY = 0, rotation,      // carousel perspective
+    progress_in_action = false,                             // check if progress-pie of cursor el is in action
+    timer,                                                  // timer for progress-pie
+    timerSeconds = 2,                                       // progress-pie countdown time
+    timerFinish,                                            // time for progress-pie countdown
+    progress_hover_element,                                 // element that's hovered by virtual cursor
+    transformProp = Modernizr.prefixed('transform'),        // check CSS3 transforms
+    navigation_left_width, navigation_right_width,          // width of navigation areas
+    max_figure_height = 0,                                  // store the max figure height to calc the max Y translation 
+    active_carousel = 0,                                    // store the number of the active carousel
+    spacing = 500;                                          // spacing between screens
 
 function Carousel3D ( el ) {
     this.element = el;
@@ -43,6 +47,7 @@ Carousel3D.prototype.modify = function() {
     translateZ = _translateZ;
     
     for ( i = 0; i < this.panelCount; i++ ) {
+        
         panel = this.element.children[i];
         angle = this.theta * i;
         panel.style.opacity = 1;
@@ -99,7 +104,7 @@ function checkCursorPosition() {
     /********************/
     
     var hover = false;
-    $('#navigation').find('button').each(function() {
+    $buttons.each(function() {
         
         // get button coordinates
         var button_x = $(this).offset().left;
@@ -178,8 +183,8 @@ function checkCursorPosition() {
     } else if (rotation > 360) {
         rotation = 0;
     }
-    
-    carousel.transform();
+
+    carousels[active_carousel].transform();
     
 }
 
@@ -259,12 +264,20 @@ function handleButtonClick($obj) {
 
     if (type == 'navigation') {
         var increment = parseInt( $obj.data('increment') );
-        carousel.rotation += carousel.theta * increment * -1;
-        carousel.transform();
-    } else if (type == 'rotate') {
-        $obj.addClass('rotate').one('webkitTransitionEnd', function () {
-            $obj.removeClass('rotate');
-        });
+        carousels[active_carousel].rotation += carousels[active_carousel].theta * increment * -1;
+        carousels[active_carousel].transform();
+    } else if (type == 'switch') {
+        var target = $obj.data('target');
+        active_carousel = target;
+        
+        // calculate translation to move to next carousel
+        var left = target * window_width;
+        
+        if (target > 0) {
+            left += spacing * target;
+        }
+        
+        $('.wrapper-inner').css({'-webkit-transform':'translate3D(-'+left+'px,0,0)'});
     }
 }
 
@@ -274,9 +287,11 @@ $(function() {
     window_height = $(window).height();
     $cursor = $('#cursor');
     $progress = $('#progress');
-    $carousel = $('#carousel');
+    $carousels = $('.carousel');
     $previous = $('#previous');
     $next = $('#next');    
+    $screen = $('.screen');
+    $buttons = $('#navigation').find('button');
     
     navigation_left_width = $('#left').width();
     navigation_right_width = $('#right').width();    
@@ -297,27 +312,55 @@ $(function() {
         };
     }
     
-    // carousel init 
-    carousel = new Carousel3D(document.getElementById('carousel'));
+    // init carousels
+    $carousels.each(function(i) {
+        carousels[i] = new Carousel3D($(this).get(0)); // get raw dom element
 
-    // populate on startup
-    carousel.panelCount = 20;
-    carousel.modify();
+        // populate on startup
+        carousels[i].panelCount = $(this).find('figure').length;
+        carousels[i].modify();        
+        
+    });
 
     // set carousel to middle of screen
-    var t = (window_height - $carousel.height()) / 2;
-    $carousel.css({'top':t});    
+    //var t = (window_height - $carousel.height()) / 2;
+    //$carousel.css({'top':t});    
     
     $(document).on('click','button',function(){
         handleButtonClick($(this));
         return false;
     });
     
-    $carousel.find('figure').each(function(){
-        var $obj = $(this);
-        if (max_figure_height < $obj.height()) {
-            max_figure_height = $obj.height();
-        }    
+    // set some initial widths for multiple carousels
+    $('.wrapper-outer').width(window_width);
+    $('.wrapper-inner').width($carousels.length * window_width);
+
+    $screen.width(window_width);
+    $screen.each(function(i) {
+        var l = i * window_width;
+        
+        // all screens, except the first, get a spacing to the left screen
+        if (i > 0) {
+            l += spacing * i;
+        }
+        
+        $(this).css({'left':l});
     });
+
+    $buttons.each(function(i) {
+        var l = i * $(this).width();
+        $(this).css({'left':l});
+    });    
+
+    /*
+    $carousels.each(function(){
+        $(this).find('figure').each(function(){
+            var $obj = $(this);
+            if (max_figure_height < $obj.height()) {
+                max_figure_height = $obj.height();
+            }    
+        });
+    });
+    */
 
 });
