@@ -6,7 +6,8 @@ var $cursor,
     $next,
     $screen,
     $buttons,
-    $timer;
+    $timer,
+    $wrapper;
 
 // global vars
 var carousels = [],                                         // carousel object
@@ -20,7 +21,8 @@ var carousels = [],                                         // carousel object
     progress_hover_element,                                 // element that's hovered by virtual cursor
     transformProp = Modernizr.prefixed('transform'),        // check CSS3 transforms
     navigation_left_width, navigation_right_width,          // width of navigation areas 
-    c = 0;                                                  // store the number of the active carousel
+    c = 0,                                                  // store the number of the active carousel
+    random;                                                 // store current amount of random images temporary
 
 function Carousel3D ( el ) {
     this.element = el;
@@ -242,7 +244,7 @@ function moveCursor(data) {
      * 
      */
 
-    carousels[c].translateY = ((kinect_cursor_y * ((carousels[c].max_height + 1200) / 480)) * -1) + 1500;
+    carousels[c].translateY = -500 + (kinect_cursor_y * ((carousels[c].max_height + 1200) / 480)) * -1;
 	
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
@@ -283,8 +285,49 @@ function handleButtonClick($obj) {
     }
 }
 
+function insertRandomImages(images) {
+    var $l = $('.carousel').last();
+    var r = Math.floor(Math.random() * 6) + 1;
+    
+    $l.append('<figure></figure>');
+    
+    for (var i = 1; i <= r; i++) {
+        if (random < images.length) {
+            var img = images[random].substring(3);
+            $l.find('figure').last().append('<img src="' + img + '">');
+            random++;
+        }
+    }
+
+    if (random < images.length) {
+        insertRandomImages(images);
+    }
+    
+}
+
 $(function() {
 
+    $wrapper = $('.wrapper');
+    
+    // build image carousel html
+    $.ajax({
+        type: 'GET',
+        url: 'php/dir.php',
+        dataType: 'json',
+        async: false,
+        success: function(res) {
+            $.each(res, function(key, images) {
+                
+                // reset random var for each carousel (folder = carousel)
+                random = 0;
+                $wrapper.append('<div class="screen"><div class="container"><div class="carousel"></div></div></div>');
+
+                insertRandomImages(images);
+                
+            });
+        }
+    });
+    
     window_width = $(window).width();
     window_height = $(window).height();
     $cursor = $('#cursor');
