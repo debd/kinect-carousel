@@ -360,6 +360,6 @@ $(function() {
     $buttons.each(function(i) {
         var l = i * $(this).width();
         $(this).css({'left':l});
-    });    
+    });
 
 });
