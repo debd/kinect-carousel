@@ -14,19 +14,15 @@ body, html {
     height:100%;
 }
 
-.wrapper-outer {
-    height:100%;
-    overflow: hidden;
-}
-
-.wrapper-inner {
+.wrapper {
     height:100%;
     -webkit-transition: -webkit-transform 1s;
 }
 
 .screen {
+    height:100%;
+    -webkit-transition: all 1s;
     position: absolute;
-    height:100%;    
 }
 
 .rotate {

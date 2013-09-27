@@ -20,8 +20,7 @@ var carousels = [],                                         // carousel object
     progress_hover_element,                                 // element that's hovered by virtual cursor
     transformProp = Modernizr.prefixed('transform'),        // check CSS3 transforms
     navigation_left_width, navigation_right_width,          // width of navigation areas 
-    c = 0,                                                  // store the number of the active carousel
-    spacing = 500;                                          // spacing between screens
+    c = 0;                                                  // store the number of the active carousel
 
 function Carousel3D ( el ) {
     this.element = el;
@@ -68,7 +67,6 @@ Carousel3D.prototype.modify = function() {
 
     // adjust rotation so panels are always flat
     this.rotation = Math.round( this.rotation / this.theta ) * this.theta;
-
     this.transform();
 
 };
@@ -268,17 +266,16 @@ function handleButtonClick($obj) {
     var type = $obj.data('type');
 
     if (type == 'switch') {
-        var target = $obj.data('target');
-        c = target;
+        c = $obj.data('target');
+        
+        // fade carousels in/out
+        $screen.not($screen.eq(c)).css({'opacity':0});
+        $screen.eq(c).css({'opacity':1});
         
         // calculate translation to move to next carousel
-        var left = target * window_width;
+        var top = $screen.eq(c).css('top');
         
-        if (target > 0) {
-            left += spacing * target;
-        }
-        
-        $('.wrapper-inner').css({'-webkit-transform':'translate3D(-'+left+'px,0,0)'});
+        $('.wrapper').css({'-webkit-transform':'translate3D(0,-'+top+',0)'});
     }
 }
 
@@ -314,56 +311,51 @@ $(function() {
         };
     }
     
+    // top margin
+    var top = 0;
+    
     // init carousels
     $carousels.each(function(i) {
+       
+        // init carousel
         carousels[i] = new Carousel3D($(this).get(0)); // get raw dom element
 
         // populate on startup
         carousels[i].panelCount = $(this).find('figure').length;
-        carousels[i].modify();        
+        carousels[i].modify();
+
+        // figure height
+        $(this).find('figure').each(function(){
+            var $obj = $(this);
+            if (carousels[i].max_height < $obj.height()) {
+                carousels[i].max_height = $obj.height();
+            }
+        });
+
+        top += carousels[i].max_height;
+        
+        // set width and margin
+        // first carousel doesn't get top margin
+        var m = (i == 0) ? 0 : top;  
+        $screen.eq(i).css({'width':window_width,'top':m});            
+
+        // set carousel to middle of screen
+        var t = (window_height - $(this).height()) / 2;
+        $(this).css({'top':t});        
         
     });
+    
+    // fade in first carousel
+    $('.screen:first-child').css({'opacity':1});
     
     $(document).on('click','button',function(){
         handleButtonClick($(this));
         return false;
-    });
-    
-    // set some initial widths for multiple carousels
-    $('.wrapper-outer').width(window_width);
-    $('.wrapper-inner').width($carousels.length * window_width);
-
-    $screen.width(window_width);
-    $screen.each(function(i) {
-        var l = i * window_width;
-        
-        // all screens, except the first, get a spacing to the left screen
-        if (i > 0) {
-            l += spacing * i;
-        }
-        
-        $(this).css({'left':l});
     });
 
     $buttons.each(function(i) {
         var l = i * $(this).width();
         $(this).css({'left':l});
     });    
-
-    // get max height of each image set for each carousel
-    $carousels.each(function(i){
-        
-        // figure height
-        $(this).find('figure').each(function(){
-            var $obj = $(this);
-            if (carousels[i].max_height < $obj.height()) {
-                carousels[i].max_height = $obj.height();
-            }    
-        });
-        
-        // set carousel to middle of screen
-        var t = (window_height - $(this).height()) / 2;
-        $(this).css({'top':t});
-    });
 
 });
