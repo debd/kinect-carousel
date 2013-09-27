@@ -272,6 +272,10 @@ function handleButtonClick($obj) {
         $screen.not($screen.eq(c)).css({'opacity':0});
         $screen.eq(c).css({'opacity':1});
         
+        // set active button
+        $buttons.removeClass('active');
+        $buttons.eq(c).addClass('active');
+        
         // calculate translation to move to next carousel
         var top = $screen.eq(c).css('top');
         

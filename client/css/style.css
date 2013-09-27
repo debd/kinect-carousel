@@ -95,12 +95,17 @@ body, html {
         padding:0;
         display: block;
         color:#fff;
-        font-size: 80px;
+        font-size: 60px;
         color:rgba(255,255,255,0.4);
         border:none;
         box-shadow: none;
         background-color: rgba(255,255,255,0.15);
-        -webkit-transition: -webkit-transform 1s;
+        -webkit-transition: all 1s;
+    }
+    
+    #navigation button.active {
+        /*color:rgba(255,85,0,0.4);*/
+        color:#FF5500;
     }
 
 .timer {
@@ -191,10 +196,11 @@ body, html {
 }
 
 .carousel figure p {
-    background-color: #494441;
+    background-color: #FF5500;
     width:500px;
-    padding:80px 20px;
-    color:#55EFCD;
+    padding:80px 20px 69px 20px;
+    font-size: 30px;
+    color:#fff;
     text-transform: uppercase;
     font-family: 'HelveticaNeueLTPro-BlkCn', 'Helvetica', 'Arial', sans-serif;
 }
