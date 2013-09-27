@@ -22,7 +22,9 @@ var carousels = [],                                         // carousel object
     transformProp = Modernizr.prefixed('transform'),        // check CSS3 transforms
     navigation_left_width, navigation_right_width,          // width of navigation areas 
     c = 0,                                                  // store the number of the active carousel
-    random;                                                 // store current amount of random images temporary
+    random,                                                 // store current amount of random images temporary
+    image_set_min = 2,                                      // minimum images per image set
+    image_set_max = 5;                                      // maximum images per image set
 
 function Carousel3D ( el ) {
     this.element = el;
@@ -287,13 +289,13 @@ function handleButtonClick($obj) {
 
 function insertRandomImages(images) {
     var $l = $('.carousel').last();
-    var r = Math.floor(Math.random() * 5) + 2;
+    var r = Math.floor(Math.random() * image_set_max) + image_set_min;
     
     $l.append('<figure></figure>');
     
     for (var i = 1; i <= r; i++) {
         if (random < images.length) {
-            var img = images[random].substring(3);
+            var img = images[random].substring(3); // remove the "../" at the beginning of the filename
             $l.find('figure').last().append('<img src="' + img + '">');
             random++;
         }
