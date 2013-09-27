@@ -5,7 +5,8 @@ var $cursor,
     $previous,
     $next,
     $screen,
-    $buttons;
+    $buttons,
+    $timer;
 
 // global vars
 var carousels = [],                                         // carousel object
@@ -133,11 +134,13 @@ function checkCursorPosition() {
     // start progress animation if at least one button is covered by the cursor
     if (hover) {
         if (!progress_in_action) {
+            $timer.show();
             timerFinish = new Date().getTime()+(timerSeconds*1000);
             timer = setInterval('stopWatch()',50);
             progress_in_action = true;
         }
     } else {
+        $timer.hide();        
         clearInterval(timer);
         drawTimer(0);
         progress_in_action = false;        
@@ -149,6 +152,9 @@ function checkCursorPosition() {
         
     // check left/right hover area
     var el = document.elementFromPoint(cursor_x,cursor_y);
+    
+    console.log(el)
+    
     var direction = $(el).attr('id');
     var cursor_position_in_percent;
 
@@ -292,6 +298,7 @@ $(function() {
     $next = $('#next');    
     $screen = $('.screen');
     $buttons = $('#navigation').find('button');
+    $timer = $('.timer');
     
     navigation_left_width = $('#left').width();
     navigation_right_width = $('#right').width();    

@@ -45,6 +45,12 @@ body, html {
     z-index: 1000;
 }
 
+    #cursor .timer {
+        position: relative;
+        z-index: 1001;
+        display: none;
+    }
+
     #cursor input[type="text"] {
         display: none !important;
     }
