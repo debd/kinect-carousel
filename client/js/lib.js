@@ -15,7 +15,7 @@ var carousels = [],                                         // carousel object
     cursor_x, cursor_y,                                     // converted position data from kinect res to client res
     progress_in_action = false,                             // check if progress-pie of cursor el is in action
     timer,                                                  // timer for progress-pie
-    timerSeconds = 2,                                       // progress-pie countdown time
+    timerSeconds = 1,                                       // progress-pie countdown time
     timerFinish,                                            // time for progress-pie countdown
     progress_hover_element,                                 // element that's hovered by virtual cursor
     transformProp = Modernizr.prefixed('transform'),        // check CSS3 transforms
