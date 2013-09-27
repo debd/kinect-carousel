@@ -50,4 +50,4 @@ Demonstration video coming soon.
 		- [oscP5 0.9.8](http://www.sojamo.de/libraries/oscP5/download/oscP5-0.9.8.zip)
 		
 - Client:  
-	- Modern browser with websocket support
+	- Webkit browser
