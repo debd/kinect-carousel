@@ -323,10 +323,6 @@ $(function() {
         carousels[i].modify();        
         
     });
-
-    // set carousel to middle of screen
-    //var t = (window_height - $carousel.height()) / 2;
-    //$carousel.css({'top':t});    
     
     $(document).on('click','button',function(){
         handleButtonClick($(this));
@@ -354,13 +350,20 @@ $(function() {
         $(this).css({'left':l});
     });    
 
+    // get max height of each image set for each carousel
     $carousels.each(function(i){
+        
+        // figure height
         $(this).find('figure').each(function(){
             var $obj = $(this);
             if (carousels[i].max_height < $obj.height()) {
                 carousels[i].max_height = $obj.height();
             }    
         });
+        
+        // set carousel to middle of screen
+        var t = (window_height - $(this).height()) / 2;
+        $(this).css({'top':t});
     });
 
 });
