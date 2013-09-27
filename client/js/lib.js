@@ -239,16 +239,12 @@ function moveCursor(data) {
      *   
      *   1. kinect returns Y data from 0 to 480 
      *   2. max translation belongs to max_figure_height (height of container whichs contains the most images)
-	 *   3. add 1200 to max_figure_height, cause Y translation starts at -500 and we need 700px for spacing (looks better ;))
+	 *   3. add 1700 to max_figure_height, cause Y translation starts at -700 and we need 1000px for spacing (looks better ;))
      *   4. convert both ranges and apply it to Y translation
      * 
      */
 
-<<<<<<< HEAD
-    carousels[c].translateY = -500 + (kinect_cursor_y * ((carousels[c].max_height + 1200) / 480)) * -1;
-=======
     carousels[c].translateY = 700 + (kinect_cursor_y * ((carousels[c].max_height + 1700) / 480)) * -1;
->>>>>>> 752fe7149c2cee169ee3137b2312e75b7d53307d
 	
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
@@ -291,11 +287,7 @@ function handleButtonClick($obj) {
 
 function insertRandomImages(images) {
     var $l = $('.carousel').last();
-<<<<<<< HEAD
-    var r = Math.floor(Math.random() * 6) + 1;
-=======
     var r = Math.floor(Math.random() * 5) + 2;
->>>>>>> 752fe7149c2cee169ee3137b2312e75b7d53307d
     
     $l.append('<figure></figure>');
     
@@ -378,9 +370,10 @@ $(function() {
 
 });
 
+// init the carousels when all images are loaded
 $(window).load(function(){
 	
-	 // top margin
+	// top margin
     var top = 0;
     
     // init carousels
@@ -416,7 +409,4 @@ $(window).load(function(){
     
     // fade in first carousel
     $('.screen:first-child').css({'opacity':1});
-    
-   
-	
-	});
+});
