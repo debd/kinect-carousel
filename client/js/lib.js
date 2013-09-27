@@ -242,7 +242,7 @@ function moveCursor(data) {
      * 
      */
 
-    carousels[c].translateY = ((kinect_cursor_y * ((carousels[c].max_height + 1200) / 480)) * -1) - 500;
+    carousels[c].translateY = ((kinect_cursor_y * ((carousels[c].max_height + 1200) / 480)) * -1) + 1500;
 	
     $cursor.css({'left':cursor_x,'top':cursor_y});
 
