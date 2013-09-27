@@ -154,14 +154,14 @@ function checkCursorPosition() {
      *   
      *   1. to get a smooth rotation, use a power function 
      *   2. to convert our values (0 - 100; position in percent, relative to hover area) to a rotation value from 
-     *       0 to 2 (degree), the following factors are needed:
+     *       0 to 10 (degree), the following factors are needed:
      *       
-     *       x = cursor_position_in_percent
-     *       a = 0,012
-     *       n = 4
+     *       a = 0,022
+     *       x = cursor_position_in_percent     
+     *       n = 3
      *       
      *       y = f(x) = ax^n
-     *       y = f(x) =  0,012 * x^4
+     *       y = f(x) =  0,022 * x ^ 3 
      * 
      */    
     
