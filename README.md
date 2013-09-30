@@ -25,7 +25,7 @@ Demonstration video coming soon.
   `/kinect-carousel/kinect/kinect.pde`
 - Put images in `/kinect-carousel/client/img` folder  
   Carousels are initiated for each folder inside this folder (see the example folder/file structure)
-- Open Client  
+- Open client on localhost/webserver (PHP must be enabled)
   `/kinect-carousel/client/index.html`
 - Have fun!
 
