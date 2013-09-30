@@ -11,3 +11,7 @@ Thumbs.db
 # PhpStorm files     #
 ######################
 .idea/
+
+# Project  files     #
+######################
+client/img/*
