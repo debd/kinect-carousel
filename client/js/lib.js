@@ -241,7 +241,7 @@ function moveCursor(data) {
      *   
      *   1. kinect returns Y data from 0 to 480 
      *   2. max translation belongs to max_figure_height (height of container whichs contains the most images)
-	 *   3. add 1700 to max_figure_height, cause Y translation starts at -700 and we need 1000px for spacing (looks better ;))
+	 *   3. add 2200 to max_figure_height, cause Y translation starts at -700 and we need 1500px for spacing (looks better ;))
      *   4. convert both ranges and apply it to Y translation
      * 
      */

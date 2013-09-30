@@ -87,7 +87,7 @@ body, html {
         height:150px;
         left:0;
         font-family: 'HelveticaNeueLTPro-BlkCn', 'Helvetica', 'Arial', sans-serif;
-        top:0;
+        bottom:0;
         padding:0;
         display: block;
         color:#fff;
@@ -100,7 +100,6 @@ body, html {
     }
     
     #navigation button.active {
-        /*color:rgba(255,85,0,0.4);*/
         color:#FF5500;
     }
 
@@ -171,15 +170,6 @@ body, html {
     -o-transform-style: preserve-3d;
     transform-style: preserve-3d;
 }
-
-/*
-.carousel {
-    -webkit-transition: -webkit-transform 0.1s;
-    -moz-transition: -moz-transform 0.1s;
-    -o-transition: -o-transform 0.1s;
-    transition: transform 0.1s;
-}
-*/
 
 .carousel.panels-backface-invisible figure {
     -webkit-backface-visibility: hidden;
