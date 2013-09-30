@@ -19,7 +19,7 @@ var carousels = [],                                         // carousel object
     timerSeconds = 1,                                       // progress-pie countdown time
     timerFinish,                                            // time for progress-pie countdown
     progress_hover_element,                                 // element that's hovered by virtual cursor
-    transformProp = Modernizr.prefixed('transform'),        // check CSS3 transforms
+    transformProp = Modernizr.prefixed('transform'),        // get correct vendor prefix
     navigation_left_width, navigation_right_width,          // width of navigation areas 
     c = 0,                                                  // store the number of the active carousel
     random,                                                 // store current amount of random images temporary
