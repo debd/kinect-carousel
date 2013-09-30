@@ -7,7 +7,8 @@ var $cursor,
     $screen,
     $buttons,
     $timer,
-    $wrapper;
+    $wrapper,
+    $navigation;
 
 // global vars
 var carousels = [],                                         // carousel object
@@ -282,7 +283,7 @@ function handleButtonClick($obj) {
         // calculate translation to move to next carousel
         var top = $screen.eq(c).css('top');
         
-        $('.wrapper').css({'-webkit-transform':'translate3D(0,-'+top+',0)'});
+        $wrapper.css({'-webkit-transform':'translate3D(0,-'+top+',0)'});
     }
 }
 
@@ -315,7 +316,8 @@ function insertRandomImages(images) {
 
 $(function() {
 
-    $wrapper = $('.wrapper');
+    $wrapper = $('#wrapper');
+    $navigation = $('#navigation');
     
     // build image carousel html
     $.ajax({
@@ -328,9 +330,15 @@ $(function() {
                 
                 // reset random var for each carousel (folder = carousel)
                 random = 0;
+                
+                // insert carousel container
                 $wrapper.append('<div class="screen"><div class="container"><div class="carousel"></div></div></div>');
 
+                // insert images
                 insertRandomImages(images);
+                
+                // insert button 
+                $navigation.append('<button data-type="switch" data-target=" ' + key + '" class="active">' + key + '</button>');
                 
             });
         }
@@ -344,7 +352,7 @@ $(function() {
     $previous = $('#previous');
     $next = $('#next');    
     $screen = $('.screen');
-    $buttons = $('#navigation').find('button');
+    $buttons = $navigation.find('button');
     $timer = $('.timer');
     navigation_left_width = $('#left').width();
     navigation_right_width = $('#right').width();    
@@ -365,9 +373,11 @@ $(function() {
         };
     }
 
+    // set width and margin of each button
+    var b = window_width / $buttons.length;
     $buttons.each(function(i) {
-        var l = i * $(this).width();
-        $(this).css({'left':l});
+        var l = i * b;
+        $(this).css({'width':b,'left':l});
     });
 
 });

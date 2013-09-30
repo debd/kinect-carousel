@@ -36,13 +36,11 @@ function read_all_files($root = '.'){
 $array = array();
 $dirs = read_all_files('../img');
 
-$i = 0;
 foreach ($dirs['dirs'] as $dir) {
-    
     $images = read_all_files($dir);
-    
-    $array[$i] = $images['files'];
-    $i++;
+    $dirname = substr($dir, 7);
+    $dirname = substr($dirname, 0, -1);
+    $array[$dirname] = $images['files'];
 }
 
 echo json_encode($array);

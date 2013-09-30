@@ -22,7 +22,7 @@ body, html {
     height:100%;
 }
 
-.wrapper {
+#wrapper {
     height:100%;
     -webkit-transition: -webkit-transform 1s;
 }
@@ -49,7 +49,7 @@ body, html {
     z-index: 1000;
 }
 
-    #cursor .timer {
+    #cursor #timer {
         position: relative;
         z-index: 1001;
         display: none;
@@ -84,7 +84,6 @@ body, html {
     #navigation button {
         position: absolute;
         z-index: 11000;
-        width:33.3%;
         height:150px;
         left:0;
         font-family: 'HelveticaNeueLTPro-BlkCn', 'Helvetica', 'Arial', sans-serif;
@@ -105,7 +104,7 @@ body, html {
         color:#FF5500;
     }
 
-.timer {
+#timer {
     position:relative;
     font-size: 50px;
     width:1em;
@@ -114,7 +113,7 @@ body, html {
     text-indent: -99999px;
 }
 
-.timer > .percent {
+#timer > .percent {
     position: absolute;
     top: 1.05em;
     left: 0;
@@ -123,18 +122,18 @@ body, html {
     text-align:center;
 }
 
-.timer > #slice {
+#timer > #slice {
     position:absolute;
     width:1em;
     height:1em;
     clip:rect(0px,1em,1em,0.5em);
 }
 
-.timer > #slice.gt50 {
+#timer > #slice.gt50 {
     clip:rect(auto, auto, auto, auto);
 }
 
-.timer > #slice > .pie {
+#timer > #slice > .pie {
     border: 0.1em solid #c0c0c0;
     position:absolute;
     width:0.8em; /* 1 - (2 * border width) */
@@ -145,7 +144,7 @@ body, html {
     border-radius:0.5em;
 }
 
-.timer > #slice > .pie.fill {
+#timer > #slice > .pie.fill {
     -moz-transform:rotate(180deg) !important;
     -webkit-transform:rotate(180deg) !important;
     -o-transform:rotate(180deg) !important;

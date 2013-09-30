@@ -23,7 +23,7 @@ Demonstration video coming soon.
   `$ node oscbridge.js -port 4344`
 - Start Processing    
   `/kinect-carousel/kinect/kinect.pde`
-- Add folders with images (the name doesn't matter) to `/kinect-carousel/client/img` to initiate as many carousels as folders. Don't put files directly in `/kinect-carousel/client/img`, they won't be considered
+- Add folders with images (the name doesn't matter) to `/kinect-carousel/client/img` to initiate as many carousels as folders. Don't put files directly in `/kinect-carousel/client/img`, they won't be included
 - Open client on localhost/webserver (PHP must be enabled)  
   `/kinect-carousel/client/index.html`
 - Have fun!
