@@ -38,12 +38,12 @@ Demonstration video coming soon.
 ### Software
 
 - Server:
-	- [node](http://nodejs.org/)  
-      `$ brew install node`	
-     - node modules (already included in `/kinect-carousel/server/node_modules`)
+    - [node](http://nodejs.org/)  
+    `$ brew install node`	    
+    - node modules (already included in `/kinect-carousel/server/node_modules`)
         - [faye-websocket](https://github.com/faye/faye-websocket-node)
         - [node-osc](https://github.com/termie/node-osc)
-     - Localhost/webserver with PHP
+    - Localhost/webserver with PHP
 	
 - Kinect:
 	- [Processing](https://processing.org/download/)
