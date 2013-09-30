@@ -40,7 +40,10 @@ foreach ($dirs['dirs'] as $dir) {
     $images = read_all_files($dir);
     $dirname = substr($dir, 7);
     $dirname = substr($dirname, 0, -1);
-    $array[$dirname] = $images['files'];
+    
+    $imagelist = $images['files'];
+    shuffle($imagelist);
+    $array[$dirname] = $imagelist;
 }
 
 echo json_encode($array);
