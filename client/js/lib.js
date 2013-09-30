@@ -79,7 +79,6 @@ Carousel3D.prototype.transform = function() {
     this.element.style[ transformProp ] = 'translateZ(' + this.translateZ + 'px) translateY(' + this.translateY + 'px) ' + this.rotateFn + '(' + this.rotation + 'deg)';    
 };
 
-// TODO: clean up
 function drawTimer(percent){
     $('div.timer').html('<div class="percent"></div><div id="slice"'+(percent > 50?' class="gt50"':'')+'><div class="pie"></div>'+(percent > 50?'<div class="pie fill"></div>':'')+'</div>');
     var deg = 360/100*percent;
@@ -228,7 +227,7 @@ function moveCursor(data) {
      *   3. so we need a factor to convert kinects range into our zooming range: kinect_range / zoom_range
      *   4. then we have to calculate the depth value with our range factor: (kinect_z - 399) / factor - 300;
      *      we substract 399 to prevent "division by zero" errors
-     *   5. to speed up the zoom, we multiplacte the result with another factor (1.5 felt good at testing)
+     *   5. to speed up the zoom, we multiplacte the result with another factor (3.5 felt good at testing)
      * 
      */
 
@@ -288,12 +287,18 @@ function handleButtonClick($obj) {
 }
 
 function insertRandomImages(images) {
+    
+    // get the last insertert element
     var $l = $('.carousel').last();
+    
+    // get random number for the count of images in a column
     var r = Math.floor(Math.random() * image_set_max) + image_set_min;
     
     $l.append('<figure></figure>');
     
     for (var i = 1; i <= r; i++) {
+        
+        // don't add more tags as images
         if (random < images.length) {
             var img = images[random].substring(3); // remove the "../" at the beginning of the filename
             $l.find('figure').last().append('<img src="' + img + '">');
@@ -301,6 +306,7 @@ function insertRandomImages(images) {
         }
     }
 
+    // start recursive loop for the rest of the images
     if (random < images.length) {
         insertRandomImages(images);
     }
@@ -340,7 +346,6 @@ $(function() {
     $screen = $('.screen');
     $buttons = $('#navigation').find('button');
     $timer = $('.timer');
-    
     navigation_left_width = $('#left').width();
     navigation_right_width = $('#right').width();    
 
@@ -359,11 +364,6 @@ $(function() {
             handleKinectData(e.data);
         };
     }
-    
-    $(document).on('click','button',function(){
-        handleButtonClick($(this));
-        return false;
-    });
 
     $buttons.each(function(i) {
         var l = i * $(this).width();
