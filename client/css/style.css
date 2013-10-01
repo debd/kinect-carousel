@@ -16,6 +16,7 @@ body {
     font-family: 'HelveticaNeueLTPro-BlkCn', 'Helvetica', 'Arial', sans-serif;
     width:100%;
     height: 100%;
+    overflow:hidden;
 }
 
 body, html {
@@ -83,7 +84,7 @@ body, html {
         height:150px;
         left:0;
         font-family: 'HelveticaNeueLTPro-BlkCn', 'Helvetica', 'Arial', sans-serif;
-        top:0;
+        bottom:0;
         padding:0;
         display: block;
         color:#fff;
