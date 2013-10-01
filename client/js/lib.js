@@ -81,7 +81,7 @@ Carousel3D.prototype.transform = function() {
 };
 
 function drawTimer(percent){
-    $('div.timer').html('<div class="percent"></div><div id="slice"'+(percent > 50?' class="gt50"':'')+'><div class="pie"></div>'+(percent > 50?'<div class="pie fill"></div>':'')+'</div>');
+    $('div#timer').html('<div class="percent"></div><div id="slice"'+(percent > 50?' class="gt50"':'')+'><div class="pie"></div>'+(percent > 50?'<div class="pie fill"></div>':'')+'</div>');
     var deg = 360/100*percent;
     $('#slice').find('.pie').css({'-webkit-transform':'rotate('+deg+'deg)'});
 }
@@ -272,10 +272,6 @@ function handleButtonClick($obj) {
     if (type == 'switch') {
         c = $obj.data('target');
         
-        // fade carousels in/out
-        $screen.not($screen.eq(c)).css({'opacity':0});
-        $screen.eq(c).css({'opacity':1});
-        
         // set active button
         $buttons.removeClass('active');
         $buttons.eq(c).addClass('active');
@@ -326,6 +322,7 @@ $(function() {
         dataType: 'json',
         async: false,
         success: function(res) {
+            var i = 0;
             $.each(res, function(key, images) {
                 
                 // reset random var for each carousel (folder = carousel)
@@ -338,7 +335,9 @@ $(function() {
                 insertRandomImages(images);
                 
                 // insert button 
-                $navigation.append('<button data-type="switch" data-target=" ' + key + '" class="active">' + key + '</button>');
+                $navigation.append('<button data-type="switch" data-target="' + i + '">' + key + '</button>');
+                
+                i++;
                 
             });
         }
@@ -353,9 +352,11 @@ $(function() {
     $next = $('#next');    
     $screen = $('.screen');
     $buttons = $navigation.find('button');
-    $timer = $('.timer');
+    $buttons.first().addClass('active');
+    
+    $timer = $('#timer');
     navigation_left_width = $('#left').width();
-    navigation_right_width = $('#right').width();    
+    navigation_right_width = $('#right').width();
 
     // websocket gedöns
     if(!('WebSocket' in window)) {
@@ -382,15 +383,14 @@ $(function() {
 
 });
 
-// init the carousels when all images are loaded
 $(window).load(function(){
-	
-	// top margin
+
+    // top margin
     var top = 0;
-    
+
     // init carousels
     $carousels.each(function(i) {
-       
+
         // init carousel
         carousels[i] = new Carousel3D($(this).get(0)); // get raw dom element
 
@@ -407,18 +407,15 @@ $(window).load(function(){
         });
 
         top += carousels[i].max_height;
-        
+
         // set width and margin
         // first carousel doesn't get top margin
-        var m = (i == 0) ? 0 : top;  
-        $screen.eq(i).css({'width':window_width,'top':m});            
+        var m = (i == 0) ? 0 : top;
+        $screen.eq(i).css({'width':window_width,'top':m});
 
         // set carousel to middle of screen
         var t = (window_height - $(this).height()) / 2;
-        $(this).css({'top':t});        
-        
+        $(this).css({'top':t});
+
     });
-    
-    // fade in first carousel
-    $('.screen:first-child').css({'opacity':1});
 });
