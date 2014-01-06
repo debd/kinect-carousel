@@ -11,7 +11,7 @@ var $cursor,
   $navigation;
 
 // global vars
-var carousels = [],                                         // carousel object
+var carousels = [],                                       // carousel object
   window_width, window_height,                            // clients resolution
   kinect_cursor_x, kinect_cursor_y, kinect_cursor_z,      // original position data from kinect (res: 640x480)
   cursor_x, cursor_y,                                     // converted position data from kinect res to client res
@@ -28,7 +28,11 @@ var carousels = [],                                         // carousel object
   image_set_max = 5,                                      // maximum images per image set
   ws_connection = false;                                  // check websocket connection
 
-function Carousel3D(el) {
+/*******************
+ * KAROUSEL
+ *******************/
+
+function Karousel(el) {
   this.element = el;
   this.rotation = 0;
   this.panelCount = 0;
@@ -41,7 +45,7 @@ function Carousel3D(el) {
   this.max_height = 0;
 }
 
-Carousel3D.prototype.modify = function () {
+Karousel.prototype.modify = function () {
 
   var panel, angle, i;
 
@@ -77,9 +81,13 @@ Carousel3D.prototype.modify = function () {
 
 };
 
-Carousel3D.prototype.transform = function () {
+Karousel.prototype.transform = function () {
   this.element.style[ transformProp ] = 'translateZ(' + this.translateZ + 'px) translateY(' + this.translateY + 'px) ' + this.rotateFn + '(' + this.rotation + 'deg)';
 };
+
+/*******************
+ * INTERACTIONS
+ *******************/
 
 function drawTimer(percent) {
   $('div#timer').html('<div class="percent"></div><div id="slice"' + (percent > 50 ? ' class="gt50"' : '') + '><div class="pie"></div>' + (percent > 50 ? '<div class="pie fill"></div>' : '') + '</div>');
@@ -104,9 +112,9 @@ function stopWatch() {
 
 function checkCursorPosition() {
 
-  /********************/
-  /* BUTTON FUNCTIONS */
-  /********************/
+  /********************
+   * BUTTON FUNCTIONS
+   ********************/
 
   var hover = false;
   $buttons.each(function () {
@@ -150,9 +158,9 @@ function checkCursorPosition() {
     progress_in_action = false;
   }
 
-  /*******************/
-  /* HOVER FUNCTIONS */
-  /*******************/
+  /*******************
+   * HOVER FUNCTIONS
+   *******************/
 
   // check left/right hover area
   var el = document.elementFromPoint(cursor_x, cursor_y);
@@ -204,7 +212,7 @@ function removeCursor() {
   $cursor.css({'opacity': 0});
 }
 
-function moveCursor(data) {
+function moveCarousel(data) {
 
   // get coordinates from node.js server
   // split string into single coordinate values
@@ -258,7 +266,7 @@ function handleKinectData(data) {
 
   // check the type of the server message
   if (data.indexOf('handposition') != -1) {
-    moveCursor(data);
+    moveCarousel(data);
   } else if (data.indexOf('found') != -1) {
     addCursor();
   } else if (data.indexOf('lost') != -1) {
@@ -397,7 +405,7 @@ $(window).load(function () {
   $carousels.each(function (i) {
 
     // init carousel
-    carousels[i] = new Carousel3D($(this).get(0)); // get raw dom element
+    carousels[i] = new Karousel($(this).get(0)); // get raw dom element
 
     // populate on startup
     carousels[i].panelCount = $(this).find('figure').length;
