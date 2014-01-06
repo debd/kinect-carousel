@@ -3,6 +3,11 @@
 Little experiment to control an image carousel with a Kinect.  
 Demonstration video coming soon.
 
+## Todos
+
+- Use Grunt/Bower/... for easier installation
+- Add online demo & video, showing kinect in action
+
 ## Credits
 
 - 3D CSS carousel by [David DeSandro](desandro.com)    
