@@ -3,10 +3,11 @@
 Little experiment to control an image carousel with a Kinect.  
 Demonstration video coming soon.
 
-## Todos
+## Todos/Roadmap
 
 - Use Grunt/Bower/... for easier installation
 - Add online demo & video, showing kinect in action
+- CSS refactoring (Use SCSS, get rid of Webkit dependency, ...)
 
 ## Credits
 
