@@ -257,9 +257,6 @@ function moveCarousel(data,type) {
     kinect_cursor_x = data.pageX;
     kinect_cursor_y = data.pageY;
     kinect_cursor_z = data.pageZ;
-
-    console.log('k' + kinect_cursor_z)
-
   }
 
   /*
@@ -457,6 +454,10 @@ $(window).load(function () {
   // use mouse cursor if no kinect is attached
   if (!ws_connection) {
 
+    // show cursor
+    addCursor();
+
+    // get mouse move and scroll events to control x, y and z axis
     $(document).mousemove(function(event) {
 
       mouse_data.pageX = event.pageX;
