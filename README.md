@@ -7,7 +7,7 @@ Demonstration video coming soon.
 
 - Use Grunt/Bower/... for easier installation
 - Add online demo & video, showing kinect in action
-- Code Refactoring (clean up messy CSS/JS...)
+- Code Refactoring (clean up messy CSS/JS...), Performance optimization
 
 ## Credits
 
