@@ -7,7 +7,7 @@ Demonstration video coming soon.
 
 - Use Grunt/Bower/... for easier installation
 - Add online demo & video, showing kinect in action
-- CSS refactoring (Use SCSS, get rid of Webkit dependency, ...)
+- Code Refactoring (clean up messy CSS/JS...)
 
 ## Credits
 
@@ -58,4 +58,4 @@ Demonstration video coming soon.
 		- [oscP5 0.9.8](http://www.sojamo.de/libraries/oscP5/download/oscP5-0.9.8.zip)
 		
 - Client:  
-	- Webkit browser
+	- Modern browser

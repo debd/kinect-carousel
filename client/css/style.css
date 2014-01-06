@@ -26,11 +26,17 @@ body, html {
 #wrapper {
     height:100%;
     -webkit-transition: -webkit-transform 1s;
+    -moz-transition: -moz-transform 1s;
+    -o-transition: -o-transform 1s;
+    transition: transform 1s;
 }
 
 .screen {
     height:100%;
-    -webkit-transition: all 1s;
+    -webkit-transition: -webkit-transform 1s;
+    -moz-transition: -moz-transform 1s;
+    -o-transition: -o-transform 1s;
+    transition: transform 1s;
     position: absolute;
 }
 
@@ -83,7 +89,7 @@ body, html {
         z-index: 11000;
         height:150px;
         left:0;
-        font-family: 'HelveticaNeueLTPro-BlkCn', 'Helvetica', 'Arial', sans-serif;
+        font-family: 'Helvetica', 'Arial', sans-serif;
         bottom:0;
         padding:0;
         display: block;
@@ -93,7 +99,10 @@ body, html {
         border:none;
         box-shadow: none;
         background-color: rgba(255,255,255,0.15);
-        -webkit-transition: all 1s;
+        -webkit-transition: all 500ms;
+        -moz-transition: all 500ms;
+        -o-transition: all 500ms;
+        transition: all 500ms;
     }
     
     #navigation button.active {
@@ -122,11 +131,11 @@ body, html {
     position:absolute;
     width:1em;
     height:1em;
-    clip:rect(0px,1em,1em,0.5em);
+    clip: rect(0px,1em,1em,0.5em);
 }
 
 #timer > #slice.gt50 {
-    clip:rect(auto, auto, auto, auto);
+    clip: rect(auto, auto, auto, auto);
 }
 
 #timer > #slice > .pie {
@@ -141,10 +150,10 @@ body, html {
 }
 
 #timer > #slice > .pie.fill {
-    -moz-transform:rotate(180deg) !important;
-    -webkit-transform:rotate(180deg) !important;
-    -o-transform:rotate(180deg) !important;
-    transform:rotate(180deg) !important;
+    -moz-transform: rotate(180deg) !important;
+    -webkit-transform: rotate(180deg) !important;
+    -o-transform: rotate(180deg) !important;
+    transform: rotate(180deg) !important;
 }
 
 .container {
