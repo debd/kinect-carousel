@@ -1,4 +1,4 @@
-# kinect-carousel
+# kinect-carousel / karousel
 
 Little experiment to control an image carousel with a Kinect.  
 Demonstration video coming soon.
