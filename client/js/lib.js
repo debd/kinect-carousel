@@ -26,7 +26,9 @@ var carousels = [],                                       // carousel object
   random,                                                 // store current amount of random images temporary
   image_set_min = 2,                                      // minimum images per image set
   image_set_max = 5,                                      // maximum images per image set
-  ws_connection = false;                                  // check websocket connection
+  ws_connection = false,                                  // check websocket connection
+  mouse_down = false,                                     // store mouse down status
+  rotate_interval = null;                                 // store interval for continous rotation on mousemove
 
 /*******************
  * KAROUSEL
@@ -184,23 +186,42 @@ function checkCursorPosition() {
    *       y = f(x) = ax^n
    *       y = f(x) =  0,022 * x ^ 3
    *
+   *   ! Set another speed level if user interacts with a mouse
+    *
    */
 
-  if (direction == 'left') {
-    cursor_position_in_percent = (1 - (cursor_x / navigation_left_width)) * 100;
-    carousels[c].rotation = carousels[c].rotation + Math.pow((0.022 * cursor_position_in_percent), 3);
-  } else if (direction == 'right') {
-    cursor_position_in_percent = (1 - (((window_width - cursor_x) / (window_width - navigation_right_width)))) * 100;
-    carousels[c].rotation = carousels[c].rotation - Math.pow((0.022 * cursor_position_in_percent), 3);
+  var a, n;
+  if (ws_connection) {
+    a = 0.022;
+    n = 3;
+  } else {
+    a = 0.005;
+    n = 3;
   }
 
-  if (carousels[c].rotation < 0) {
-    carousels[c].rotation = 360;
-  } else if (carousels[c].rotation > 360) {
-    carousels[c].rotation = 0;
+  function rotate() {
+    if (direction == 'left') {
+      cursor_position_in_percent = (1 - (cursor_x / navigation_left_width)) * 100;
+      carousels[c].rotation = carousels[c].rotation + Math.pow((a * cursor_position_in_percent), n);
+    } else if (direction == 'right') {
+      cursor_position_in_percent = (1 - (((window_width - cursor_x) / (window_width - navigation_right_width)))) * 100;
+      carousels[c].rotation = carousels[c].rotation - Math.pow((a * cursor_position_in_percent), n);
+    }
+
+    if (carousels[c].rotation < 0) {
+      carousels[c].rotation = 360;
+    } else if (carousels[c].rotation > 360) {
+      carousels[c].rotation = 0;
+    }
+
+    carousels[c].transform();
   }
 
-  carousels[c].transform();
+  if (ws_connection) {
+    rotate();
+  } else {
+    rotate_interval = setInterval(rotate,16);   // 60 frames per seconds
+  }
 
 }
 
@@ -212,18 +233,26 @@ function removeCursor() {
   $cursor.css({'opacity': 0});
 }
 
-function moveCarousel(data) {
+function moveCarousel(data,type) {
 
-  // get coordinates from node.js server
-  // split string into single coordinate values
-  var coordinates = data.split('/');
-  kinect_cursor_x = parseFloat(coordinates[1].replace(/,/g, ''));
-  kinect_cursor_y = parseFloat(coordinates[2].replace(/,/g, ''));
-  kinect_cursor_z = parseFloat(coordinates[3].replace(/,/g, ''));
+  if (type == 'kinect') {
+    // get coordinates from node.js server
+    // split string into single coordinate values
+    var coordinates = data.split('/');
+    kinect_cursor_x = parseFloat(coordinates[1].replace(/,/g, ''));
+    kinect_cursor_y = parseFloat(coordinates[2].replace(/,/g, ''));
+    kinect_cursor_z = parseFloat(coordinates[3].replace(/,/g, ''));
 
-  // extrapolate coordinates from kinect resolution to window resolution
-  cursor_x = parseInt((kinect_cursor_x * window_width) / 640);
-  cursor_y = parseInt((kinect_cursor_y * window_height) / 480);
+    // extrapolate coordinates from kinect resolution to window resolution
+    cursor_x = parseInt((kinect_cursor_x * window_width) / 640);
+    cursor_y = parseInt((kinect_cursor_y * window_height) / 480);
+  } else if (type == 'mouse') {
+    cursor_x = data.pageX;
+    cursor_y = data.pageY;
+    kinect_cursor_x = data.pageX;
+    kinect_cursor_y = data.pageY;
+    kinect_cursor_z = data.pageZ;
+  }
 
   /*
    * calculate the depth
@@ -231,7 +260,7 @@ function moveCarousel(data) {
    *   formula description:
    *
    *   1. kinect z values have a range from 400mm to 3500mm (in effect, 4000mm, but we only track until 3500 because of
-   limited space)
+   *      limited space)
    *   2. our maximal range for zooming should be around 1000px (it felt good at testing),
    *      but both increasing and decreasing, so: -300px - 300px
    *   3. so we need a factor to convert kinects range into our zooming range: kinect_range / zoom_range
@@ -239,9 +268,16 @@ function moveCarousel(data) {
    *      we substract 399 to prevent "division by zero" errors
    *   5. to speed up the zoom, we multiplacte the result with another factor (3.5 felt good at testing)
    *
+   *   ! Remove interpolation if user interacts with a mouse and substract 500 from cursor to get a higher zoom out
+   *     level and add 2000 to get a higher zoom in level
+   *
    */
 
-  carousels[c].translateZ = carousels[c]._translateZ + (((kinect_cursor_z - 399) / 5.17) - 300) * 3.5;
+  if (ws_connection) {
+    carousels[c].translateZ = carousels[c]._translateZ + (((kinect_cursor_z - 399) / 5.17) - 300) * 3.5;
+  } else {
+    carousels[c].translateZ = carousels[c]._translateZ + (((kinect_cursor_z - 500) * 2000) / window_height);
+  }
 
   /*
    * calculate the Y translation
@@ -253,12 +289,20 @@ function moveCarousel(data) {
    *   3. add 1700 to max_figure_height, cause Y translation starts at -700 and we need 1000px for spacing (looks better ;))
    *   4. convert both ranges and apply it to Y translation
    *
+   *   ! Remove interpolation if user interacts with a mouse and add spacing of 300px on top/bottom
+   *
    */
 
-  carousels[c].translateY = 700 + (kinect_cursor_y * ((carousels[c].max_height + 1700) / 480)) * -1;
+  if (ws_connection) {
+    carousels[c].translateY = 700 + (kinect_cursor_y * ((carousels[c].max_height + 1700) / 480)) * -1;
+  } else {
+    carousels[c].translateY = 300 + ((kinect_cursor_y * (carousels[c].max_height + 600)) / window_height) * -1;
+  }
 
+  // move virtual cursor
   $cursor.css({'left': cursor_x, 'top': cursor_y});
 
+  // check cursor positionf or translateX actions and button clicks
   checkCursorPosition();
 }
 
@@ -266,7 +310,7 @@ function handleKinectData(data) {
 
   // check the type of the server message
   if (data.indexOf('handposition') != -1) {
-    moveCarousel(data);
+    moveCarousel(data,'kinect');
   } else if (data.indexOf('found') != -1) {
     addCursor();
   } else if (data.indexOf('lost') != -1) {
@@ -385,6 +429,7 @@ $(function () {
     connection.onmessage = function(e) {
       handleKinectData(e.data);
     };
+
   }
 
   // set width and margin of each button
@@ -400,6 +445,32 @@ $(window).load(function () {
 
   // top margin
   var top = 0;
+
+  // use mouse cursor if no kinect is attached
+  if (!ws_connection) {
+    var data = {};
+
+    $('body').mousemove(function(event) {
+
+      data.pageX = event.pageX;
+
+      document.body.onmousedown = function() {
+        mouse_down = true;
+      };
+
+      document.body.onmouseup = function() {
+        mouse_down = false;
+      };
+
+      if (mouse_down) {
+        data.pageZ = event.pageY;
+      } else {
+        data.pageY = event.pageY;
+      }
+
+      moveCarousel(data, 'mouse');
+    });
+  }
 
   // init carousels when all images are loaded
   $carousels.each(function (i) {
