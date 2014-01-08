@@ -27,7 +27,6 @@ var carousels = [],                                       // carousel object
   image_set_min = 2,                                      // minimum images per image set
   image_set_max = 5,                                      // maximum images per image set
   ws_connection = false,                                  // check websocket connection
-  mouse_down = false,                                     // store mouse down status
   rotate_interval = null,                                 // store interval for continous rotation on mousemove
   mouse_data = {                                          // store mouse directions (x, y, z)
     pageX: 0,
@@ -458,41 +457,45 @@ $(window).load(function () {
     addCursor();
 
     // get mouse move and scroll events to control x, y and z axis
-    $(document).mousemove(function(event) {
+    $(document).mousemove(function(e) {
 
-      mouse_data.pageX = event.pageX;
-      mouse_data.pageY = event.pageY;
+      mouse_data.pageX = e.pageX;
+      mouse_data.pageY = e.pageY;
 
       moveCarousel(mouse_data, 'mouse');
     });
 
-    document.body.onmousedown = function() {
-      mouse_down = true;
-    };
-
-    document.body.onmouseup = function() {
-      mouse_down = false;
-    };
-
     window.addEventListener('mousewheel', function(e) {
 
-      if (mouse_down) {
+      var r;
+
+      // use mousewheel for depth-scrolling only in a range from 10% to 90% of the browser width
+      if (
+        mouse_data.pageX > window_width * 0.1 &&
+        mouse_data.pageX < window_width * 0.9 &&
+        mouse_data.pageY > window_height * 0.1 &&
+        mouse_data.pageY < window_height * 0.9
+      ) {
         if (e.wheelDelta < 0) {
-            mouse_data.pageZ = mouse_data.pageZ - 50;
+          mouse_data.pageZ = mouse_data.pageZ - 50;
         } else {
-          // limit depth to 2000px
           mouse_data.pageZ = mouse_data.pageZ + 50
         }
+
+        // limit depth to a range of -2000px till 2000px
+        if (mouse_data.pageZ < -2000) {
+          mouse_data.pageZ = -2000;
+        } else if (mouse_data.pageZ > 2000) {
+          mouse_data.pageZ = 2000;
+        }
+
+        moveCarousel(mouse_data, 'mouse');
+
+        // prevent normal scrolling
+        r = false;
       }
 
-      // limit depth to a range of -2000px till 2000px
-      if (mouse_data.pageZ < -2000) {
-        mouse_data.pageZ = -2000;
-      } else if (mouse_data.pageZ > 2000) {
-        mouse_data.pageZ = 2000;
-      }
-
-      moveCarousel(mouse_data, 'mouse');
+      return r;
 
     });
 
