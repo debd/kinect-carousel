@@ -109,6 +109,10 @@ body, html {
         color:#FF5500;
     }
 
+    #navigation button:focus {
+        outline: none;
+    }
+
 #timer {
     position:relative;
     font-size: 50px;

@@ -26,7 +26,7 @@ var carousels = [],                                       // carousel object
   random,                                                 // store current amount of random images temporary
   image_set_min = 2,                                      // minimum images per image set
   image_set_max = 5,                                      // maximum images per image set
-  ws_connection = false,                                  // check websocket connection
+  kinect_attached = false,                                  // check websocket connection
   rotate_interval = null,                                 // store interval for continous rotation on mousemove
   mouse_data = {                                          // store mouse directions (x, y, z)
     pageX: 0,
@@ -122,46 +122,50 @@ function checkCursorPosition() {
    * BUTTON FUNCTIONS
    ********************/
 
-  var hover = false;
-  $buttons.each(function () {
+  if (kinect_attached) {
 
-    // get button coordinates
-    var button_x = $(this).offset().left;
-    var button_y = $(this).offset().top;
+    var hover = false;
+    $buttons.each(function () {
 
-    // get button dimensions
-    var button_width = $(this).width();
-    var button_height = $(this).height();
+      // get button coordinates
+      var button_x = $(this).offset().left;
+      var button_y = $(this).offset().top;
 
-    // check if cursor is inside button
-    if (
-      ( cursor_x >= button_x )
-        && ( (cursor_x + 50) <= ( button_x + button_width ) )
-        && ( cursor_y >= button_y )
-        && ( (cursor_y + 50) <= ( button_y + button_height ) )
-      ) {
+      // get button dimensions
+      var button_width = $(this).width();
+      var button_height = $(this).height();
 
-      hover = true;
+      // check if cursor is inside button
+      if (
+        ( cursor_x >= button_x )
+          && ( (cursor_x + 50) <= ( button_x + button_width ) )
+          && ( cursor_y >= button_y )
+          && ( (cursor_y + 50) <= ( button_y + button_height ) )
+        ) {
 
-      // find element at cursor position
-      progress_hover_element = document.elementFromPoint(button_x, button_y);
+        hover = true;
+
+        // find element at cursor position
+        progress_hover_element = document.elementFromPoint(button_x, button_y);
+      }
+
+    });
+
+    // start progress animation if at least one button is covered by the cursor
+    if (hover) {
+      if (!progress_in_action) {
+        $timer.show();
+        timerFinish = new Date().getTime() + (timerSeconds * 1000);
+        timer = setInterval('stopWatch()', 50);
+        progress_in_action = true;
+      }
+    } else {
+      $timer.hide();
+      clearInterval(timer);
+      drawTimer(0);
+      progress_in_action = false;
     }
 
-  });
-
-  // start progress animation if at least one button is covered by the cursor
-  if (hover) {
-    if (!progress_in_action) {
-      $timer.show();
-      timerFinish = new Date().getTime() + (timerSeconds * 1000);
-      timer = setInterval('stopWatch()', 50);
-      progress_in_action = true;
-    }
-  } else {
-    $timer.hide();
-    clearInterval(timer);
-    drawTimer(0);
-    progress_in_action = false;
   }
 
   /*******************
@@ -195,7 +199,7 @@ function checkCursorPosition() {
    */
 
   var a, n;
-  if (ws_connection) {
+  if (kinect_attached) {
     a = 0.022;
     n = 3;
   } else {
@@ -221,7 +225,7 @@ function checkCursorPosition() {
     carousels[c].transform();
   }
 
-  if (ws_connection) {
+  if (kinect_attached) {
     rotate();
   } else {
     rotate_interval = setInterval(rotate,16);   // 60 frames per seconds
@@ -277,7 +281,7 @@ function moveCarousel(data,type) {
    *
    */
 
-  if (ws_connection) {
+  if (kinect_attached) {
     carousels[c].translateZ = carousels[c]._translateZ + (((kinect_cursor_z - 399) / 5.17) - 300) * 3.5;
   } else {
     carousels[c].translateZ = carousels[c]._translateZ + (((kinect_cursor_z - 500) * 2000) / window_height);
@@ -297,7 +301,7 @@ function moveCarousel(data,type) {
    *
    */
 
-  if (ws_connection) {
+  if (kinect_attached) {
     carousels[c].translateY = 700 + (kinect_cursor_y * ((carousels[c].max_height + 1700) / 480)) * -1;
   } else {
     carousels[c].translateY = 300 + ((kinect_cursor_y * (carousels[c].max_height + 600)) / window_height) * -1;
@@ -427,7 +431,7 @@ $(function () {
     };
 
     connection.onopen = function () {
-      ws_connection = true;
+      kinect_attached = true;
     };
 
     connection.onmessage = function(e) {
@@ -435,6 +439,12 @@ $(function () {
     };
 
   }
+
+  // mouse-click event for buttons
+  $(document).on('click', 'button', function(){
+    handleButtonClick($(this));
+    return false;
+  });
 
   // set width and margin of each button
   var b = window_width / $buttons.length;
@@ -451,10 +461,7 @@ $(window).load(function () {
   var top = 0;
 
   // use mouse cursor if no kinect is attached
-  if (!ws_connection) {
-
-    // show cursor
-    addCursor();
+  if (!kinect_attached) {
 
     // get mouse move and scroll events to control x, y and z axis
     $(document).mousemove(function(e) {
